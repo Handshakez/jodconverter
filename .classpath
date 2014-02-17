@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="jodconverter-core/src/main/java"/>
+	<classpathentry kind="src" path="jodconverter-core/src/test/java"/>
+	<classpathentry kind="src" path="jodconverter-sample-webapp/src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="jodconverter-core/target/lib/bsh-2.0b4.jar"/>
+	<classpathentry kind="lib" path="jodconverter-core/target/lib/commons-cli-1.1.jar"/>
+	<classpathentry kind="lib" path="jodconverter-core/target/lib/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="jodconverter-core/target/lib/jcommander-1.12.jar"/>
+	<classpathentry kind="lib" path="jodconverter-core/target/lib/json-20090211.jar"/>
+	<classpathentry kind="lib" path="jodconverter-core/target/lib/juh-3.2.1.jar"/>
+	<classpathentry kind="lib" path="jodconverter-core/target/lib/jurt-3.2.1.jar"/>
+	<classpathentry kind="lib" path="jodconverter-core/target/lib/ridl-3.2.1.jar"/>
+	<classpathentry kind="lib" path="jodconverter-core/target/lib/sigar-1.6.5.132.jar"/>
+	<classpathentry kind="lib" path="jodconverter-core/target/lib/snakeyaml-1.6.jar"/>
+	<classpathentry kind="lib" path="jodconverter-core/target/lib/testng-6.0.1.jar"/>
+	<classpathentry kind="lib" path="jodconverter-core/target/lib/unoil-3.2.1.jar"/>
+	<classpathentry kind="lib" path="jodconverter-sample-webapp/target/lib/commons-fileupload-1.2.1.jar"/>
+	<classpathentry kind="lib" path="jodconverter-sample-webapp/target/lib/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="jodconverter-sample-webapp/target/lib/servlet-api-2.4.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
