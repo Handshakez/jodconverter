@@ -71,10 +71,13 @@ public class ConverterServlet extends HttpServlet {
         	logger.info(String.format("successful conversion: %s [%db] to %s in %dms", inputExtension, inputFile.length(), intermediateExtension, conversionTime));
 //        	response.setContentType(outputFormat.getMediaType());
 //            response.setHeader("Content-Disposition", "attachment; filename="+ baseName + "." + outputExtension);
+            //sendFile(outputFile, response);
             
         	this.doThumb(outputFile, thumbnailFile, baseName, response);
+        	long thumbTime = System.currentTimeMillis() - conversionTime;
+        	logger.info(String.format("successful thumbnail: %s [%db] to %s in %dms", intermediateExtension, inputFile.length(), finalExtension, thumbTime));
             
-            sendFile(outputFile, response);
+            sendFile(thumbnailFile, response);
         } catch (Exception exception) {
             logger.severe(String.format("failed conversion: %s [%db] to %s; %s; input file: %s", inputExtension, inputFile.length(), intermediateExtension, exception, inputFile.getName()));
         	throw new ServletException("conversion failed", exception);
@@ -113,6 +116,7 @@ public class ConverterServlet extends HttpServlet {
 		String stdout = this.consumeStream(p.getInputStream(), "stdout");	// why is it called InputStream when it's really stdout?
 		String stderr = this.consumeStream(p.getErrorStream(), "stderr");	
 
+        p.waitFor();
 		if (p.exitValue() != 0) {
 			logger.warning("Thumbnail exited with non-zero status: " + p.exitValue());
 		}
@@ -128,6 +132,7 @@ public class ConverterServlet extends HttpServlet {
 		while ((line = br.readLine()) != null) {
 			sb.append(line);
 		}
+        br.close();
 		String rv = sb.toString();
 		if (rv.length() > 0) {
 			logger.finest("Stream '" + name + "': " + rv);

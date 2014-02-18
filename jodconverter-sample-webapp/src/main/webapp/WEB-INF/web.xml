@@ -9,7 +9,11 @@
 
   <context-param>
     <param-name>fileupload.fileSizeMax</param-name>
-    <param-value>5242880</param-value><!-- 5MB -->
+    <!--
+    <param-value>5242880</param-value>
+    -->
+    <!-- 5MB -->
+    <param-value>52428800</param-value><!-- 50MB -->
   </context-param>
 
   <!-- uncomment and edit if needed -->
