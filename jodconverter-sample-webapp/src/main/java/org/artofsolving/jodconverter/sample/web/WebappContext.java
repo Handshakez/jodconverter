@@ -62,24 +62,6 @@ public class WebappContext {
 
 		officeManager = configuration.buildOfficeManager();
 		documentConverter = new OfficeDocumentConverter(officeManager);
-		
-//		// extra hack here: update the output for pdf to include just the first page range
-//		DefaultDocumentFormatRegistry dfr = new DefaultDocumentFormatRegistry();
-//		DocumentFormat format = dfr.getFormatByExtension("pdf");
-//		Map<DocumentFamily, Map<String, ?>> allProps = format.getStorePropertiesByFamily();
-//		for (Map props : allProps.values()) {
-//			Map<String, String> filter = new HashMap<String, String>();
-//			filter.put("PageRange", "1");
-////			 PropertyValue[] aFilterData = new PropertyValue[1];
-////			 aFilterData[0] = new PropertyValue();
-////			 aFilterData[0].Name= "PageRange";
-////			 aFilterData[0].Value = "1";
-//			 
-//			 props.put("FilterData", filter);
-//		}
-		
-		//documentConverter = new OfficeDocumentConverter(officeManager, dfr);
-		
 	}
 
 	protected static void init(ServletContext servletContext) {
