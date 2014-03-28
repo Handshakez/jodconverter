@@ -3,6 +3,8 @@
 	<classpathentry kind="src" path="jodconverter-core/src/main/java"/>
 	<classpathentry kind="src" path="jodconverter-core/src/test/java"/>
 	<classpathentry kind="src" path="jodconverter-sample-webapp/src/main/java"/>
+	<classpathentry kind="src" path="pdfserver/src/main/java"/>
+	<classpathentry kind="src" path="pdfserver/src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="jodconverter-core/target/lib/bsh-2.0b4.jar"/>
 	<classpathentry kind="lib" path="jodconverter-core/target/lib/commons-cli-1.1.jar"/>
@@ -19,5 +21,7 @@
 	<classpathentry kind="lib" path="jodconverter-sample-webapp/target/lib/commons-fileupload-1.2.1.jar"/>
 	<classpathentry kind="lib" path="jodconverter-sample-webapp/target/lib/commons-io-1.4.jar"/>
 	<classpathentry kind="lib" path="jodconverter-sample-webapp/target/lib/servlet-api-2.4.jar"/>
+	<classpathentry kind="lib" path="pdfserver/target/lib/netty-all-4.0.17.Final.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
