@@ -1,7 +1,14 @@
 #!/bin/bash
 set -e
+targets="clean install"
+targets="install"
 for dir in jodconverter-core jodconverter-sample-webapp ; do
     pushd $dir
-    mvn install -DskipTests 
+    mvn $targets -DskipTests 
     popd
 done
+
+# our tests are okay
+pushd pdfserver
+mvn $targets
+popd

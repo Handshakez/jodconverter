@@ -21,7 +21,7 @@ import org.artofsolving.jodconverter.office.OfficeException;
 import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XServiceInfo;
 
-class OfficeDocumentUtils {
+public class OfficeDocumentUtils {
 
     private OfficeDocumentUtils() {
         throw new AssertionError("utility class must not be instantiated");

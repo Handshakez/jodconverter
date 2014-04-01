@@ -89,6 +89,7 @@ public class DoublePDFTask extends StandardConversionTask {
 		
 		logger.finest("Converter command: " + cmd);
 		
+		// if you get a "can't find convert", make sure to add /usr/local/bin to the path
 		ProcessBuilder pb = new ProcessBuilder(cmd);
 		Process p = pb.start();
 		
@@ -99,6 +100,8 @@ public class DoublePDFTask extends StandardConversionTask {
         p.waitFor();
 		if (p.exitValue() != 0) {
 			logger.warning("Thumbnail exited with non-zero status: " + p.exitValue());
+			logger.warning("Stderr is " + stderr);
+			logger.warning("Stdout is " + stdout);
 		}
 		return thumb;
 	}

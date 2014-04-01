@@ -3,3 +3,4 @@ bin
 jodconverter-core/target/
 jodconverter-sample-webapp/target/
 pdfserver/target/
+pdfserver/src/test/resources/test.properties

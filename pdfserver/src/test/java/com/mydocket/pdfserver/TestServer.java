@@ -6,30 +6,104 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.Properties;
 
+import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
+import org.artofsolving.jodconverter.office.OfficeManager;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExternalResource;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.mydocket.pdfserver.Server;
-
+/**
+ * If you get an error that you can't find 'convert', make sure to add /usr/local/bin to the environment where
+ * you're running the test.
+ * 
+ * @author aarvesen
+ *
+ */
 @RunWith(JUnit4.class)
 public class TestServer {
-
+		
 	private int port = 7002;
+	private Server server;
+	private static OfficeManager manager;
 	
-//	@Rule
-//	public ExternalResource start_server = new ExternalResource() {
-//		@Override
-//		protected void before() throws Throwable {
-//			
-//		}
-//		
-//		@Override
-//		protected void after() {
-//			
-//		}
-//	};
+	@BeforeClass
+	public static void startManager() throws Exception {
+		// load our properties
+		File fProps = findFile("test.properties");
+		Properties props = new Properties();
+		FileInputStream fis = new FileInputStream(fProps);
+		props.load(fis);
+		fis.close();
+		
+		System.out.println("Path:" + System.getProperty("java.library.path"));
+		
+		// now that's out of the way....
+		
+		DefaultOfficeManagerConfiguration configuration = new DefaultOfficeManagerConfiguration();
+		configuration.setPortNumber(7007);
+		configuration.setOfficeHome((String) props.getProperty("office.home", null));
+		manager = configuration.buildOfficeManager();
+		manager.start();
+	}
+	
+	@AfterClass
+	public static void stopManager() throws Exception {
+		if (manager != null) {
+			manager.stop();
+		}
+	}
+	
+	
+	
+	@Rule
+	public ExternalResource start_server = new ExternalResource() {
+		private Thread thread;
+		
+		@Override
+		protected void before() throws Throwable {
+			server = new Server(port, manager);
+			Runnable r = new Runnable() {
+				@Override
+				public void run() {
+					try {
+						server.run();
+					} catch (Exception e) {
+						fail("Exception while running server " + e.getMessage());
+					}
+				}
+				
+			};
+			thread =  new Thread(r);
+			thread.start();
+			while (! server.running) {
+				sleep("staring");
+			}
+		}
+		
+		@SuppressWarnings("deprecation")
+		@Override
+		protected void after() {
+			thread.stop();
+			while (server.running) {
+				sleep("stopping");
+			}
+		}
+		
+		private void sleep(String action) {
+			try {
+				Thread.sleep(100);
+			} catch (Exception e) {
+				fail("Exception while " + action + " server: " + e.getMessage());
+			}
+		}
+	};
 	
 	
 	@Test
@@ -39,24 +113,6 @@ public class TestServer {
 	
 	@Test
 	public void testHello() throws Exception {
-		final Server server = new Server(port, null);
-		Runnable r = new Runnable() {
-			@Override
-			public void run() {
-				try {
-					server.run();
-				} catch (Exception e) {
-					fail("Exception while running server " + e.getMessage());
-				}
-			}
-			
-		};
-		Thread t = new Thread(r);
-		t.start();
-		
-		while (! server.running) {
-			Thread.sleep(100);
-		}
 		
 		String msg = null;
 		Client c = new Client(port);
@@ -71,39 +127,32 @@ public class TestServer {
 		System.out.println(msg);
 		assertEquals("Goodbye.", msg);
 		c.close();
-		
-		System.out.println("Running? " + server.running);
-		// TODO: this sucks, right?
-		t.stop();
-		while (server.running) {
-			Thread.sleep(100);
-		}
-		System.out.println("Running? " + server.running);
 	}
+	
+	// this annoyance since running from inside of Eclipse has a different path
+	// than running from mvn command line.  Bah.
+	private static File findFile(String fname) {
+		String[] paths = {
+			"pdfserver/src/test/resources/",
+			"src/test/resources/",
+		};
+		
+		File found = null;
+		for (String p : paths) {
+			File f = new File(p + fname);
+			if (f.exists()) {
+				found = f;
+				break;
+			}
+		}
+		return found;
+	}
+	
 	
 	@Test
 	public void testFileUpload() throws Exception {
-		final Server server = new Server(port, null);
-		Runnable r = new Runnable() {
-			@Override
-			public void run() {
-				try {
-					server.run();
-				} catch (Exception e) {
-					fail("Exception while running server " + e.getMessage());
-				}
-			}
-			
-		};
-		Thread t = new Thread(r);
-		t.start();
-		
-		while (! server.running) {
-			Thread.sleep(100);
-		}
-		
 		String fname = "Handshakez Salesforce API.docx";
-		File docx = new File("src/test/resources/" + fname);
+		File docx = findFile(fname);
 		long length = docx.length();
 		
 		String msg = null;
@@ -128,21 +177,21 @@ public class TestServer {
 		}
 		
 		msg = c.readLine();
-		System.out.println(msg);
-		
-		c.sendLine("STOP");
-		msg = c.readLine();
-		System.out.println(msg);
-		assertEquals("Goodbye.", msg);
-		c.close();
-		
-		System.out.println("Running? " + server.running);
-		// TODO: this sucks, right?
-		t.stop();
-		while (server.running) {
-			Thread.sleep(100);
+		if (msg.equals("1")) {
+			System.out.println("The rest: >>>>>>");
+			System.out.println(c.readRest());
+			System.out.println("<<<<<<<<<<<<<<<<");
 		}
-		System.out.println("Running? " + server.running);
+		assertEquals("0", msg);
+		c.readSizedContent(new FileOutputStream("/tmp/thumbnail.png"));
+		c.readSizedContent(new FileOutputStream("/tmp/converted.pdf"));
+		
+		
+//		c.sendLine("STOP");
+//		msg = c.readLine();
+//		System.out.println(msg);
+//		assertEquals("Goodbye.", msg);
+		c.close();
 	}
 	
 }

@@ -1,8 +1,6 @@
 package org.artofsolving.jodconverter.sample.web;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
@@ -10,13 +8,8 @@ import javax.servlet.ServletContext;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.artofsolving.jodconverter.OfficeDocumentConverter;
-import org.artofsolving.jodconverter.document.DefaultDocumentFormatRegistry;
-import org.artofsolving.jodconverter.document.DocumentFamily;
-import org.artofsolving.jodconverter.document.DocumentFormat;
 import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
 import org.artofsolving.jodconverter.office.OfficeManager;
-
-import com.sun.star.beans.PropertyValue;
 
 public class WebappContext {
 
@@ -34,7 +27,6 @@ public class WebappContext {
 	private final OfficeManager officeManager;
 	private final OfficeDocumentConverter documentConverter;
 
-	@SuppressWarnings("rawtypes")
 	public WebappContext(ServletContext servletContext) {
 		DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
 		String fileSizeMax = servletContext.getInitParameter(PARAMETER_FILEUPLOAD_FILE_SIZE_MAX);

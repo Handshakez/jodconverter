@@ -73,7 +73,7 @@ public abstract class AbstractConversionTask implements OfficeTask {
         }
     }
 
-    private XComponent loadDocument(OfficeContext context, File inputFile) throws OfficeException {
+    protected XComponent loadDocument(OfficeContext context, File inputFile) throws OfficeException {
         if (!inputFile.exists()) {
             throw new OfficeException("input document not found");
         }
@@ -108,7 +108,7 @@ public abstract class AbstractConversionTask implements OfficeTask {
     	// noop
     }
 
-    private void storeDocument(XComponent document, File outputFile) throws OfficeException {
+    protected void storeDocument(XComponent document, File outputFile) throws OfficeException {
         Map<String,?> storeProperties = getStoreProperties(outputFile, document);
         if (storeProperties == null) {
             throw new OfficeException("unsupported conversion");

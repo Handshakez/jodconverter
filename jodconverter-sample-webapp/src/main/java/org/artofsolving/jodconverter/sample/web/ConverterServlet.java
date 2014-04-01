@@ -125,21 +125,21 @@ public class ConverterServlet extends HttpServlet {
         response.setHeader("Content-Disposition", "attachment; filename="+ baseName + ".png");
 	}
 	
-	private String consumeStream(InputStream is, String name) throws Exception {
-		StringBuilder sb = new StringBuilder();
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		String line = null;
-		while ((line = br.readLine()) != null) {
-			sb.append(line);
+		private String consumeStream(InputStream is, String name) throws Exception {
+			StringBuilder sb = new StringBuilder();
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+	        br.close();
+			String rv = sb.toString();
+			if (rv.length() > 0) {
+				logger.finest("Stream '" + name + "': " + rv);
+			}
+			
+			return rv;
 		}
-        br.close();
-		String rv = sb.toString();
-		if (rv.length() > 0) {
-			logger.finest("Stream '" + name + "': " + rv);
-		}
-		
-		return rv;
-	}
 	
 	private void sendFile(File file, HttpServletResponse response) throws IOException {
 		response.setContentLength((int) file.length());

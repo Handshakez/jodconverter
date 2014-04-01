@@ -5,7 +5,10 @@ files= { 'file' : open(settings.infile, 'rb')}
 
 start = time.time()
 print "Staring request..."
-r = requests.post(settings.url, files=files, stream=True)
+r = requests.post(settings.url, files=files, stream=True, 
+    verify='/tmp/Thumbnail.pem')
+    #cert=('server.crt', 'client.key'))
+
 end = time.time()
 print "Elapsed: {}".format(end - start)
 if r.status_code != requests.codes.ok:

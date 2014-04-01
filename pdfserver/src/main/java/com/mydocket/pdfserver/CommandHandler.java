@@ -37,7 +37,9 @@ public class CommandHandler extends ChannelInboundHandlerAdapter {
 			f.addListener(ChannelFutureListener.CLOSE);
 		} else if (cmd instanceof PushCommand) {
 			ConversionResult result = adapter.consume((PushCommand) cmd);
-			this.println(ctx, "Push: Was Error? " + result.isError());
+		    //this.println(ctx, "Push: Was Error? " + result.isError());
+		    ChannelFuture f = ctx.writeAndFlush(result);
+		    f.addListener(ChannelFutureListener.CLOSE);
 			//this.println(ctx, "Push.");
 			//this.println(ctx, "Size2: " + ((PushCommand) cmd).getContent());
 		}

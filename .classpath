@@ -21,6 +21,8 @@
 	<classpathentry kind="lib" path="jodconverter-sample-webapp/target/lib/servlet-api-2.4.jar"/>
 	<classpathentry kind="lib" path="pdfserver/target/lib/netty-all-4.0.17.Final.jar"/>
 	<classpathentry kind="lib" path="jodconverter-core/target/lib/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="pdfserver/target/lib/jul-to-slf4j-1.7.6.jar"/>
+	<classpathentry kind="lib" path="pdfserver/target/lib/slf4j-api-1.7.6.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

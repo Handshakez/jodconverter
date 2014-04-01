@@ -12,6 +12,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.artofsolving.jodconverter.office.OfficeManager;
 
 import com.mydocket.pdfmaker.codec.CommandDecoder;
+import com.mydocket.pdfmaker.codec.ConversionResultEncoder;
 
 public class Server {
 	
@@ -42,7 +43,12 @@ public class Server {
 					@Override
 					public void initChannel(SocketChannel ch) throws Exception {
 //						ch.pipeline().addLast(new ChannelHandler());
-						ch.pipeline().addLast(new CommandDecoder(), new CommandHandler(Server.this.officeManager));
+						ch.pipeline().addLast(
+								// en/decoders have to be added before handler (??)
+								new CommandDecoder(), 
+								new ConversionResultEncoder(),
+								new CommandHandler(Server.this.officeManager)
+								);
 					}
 				})
 				.option(ChannelOption.SO_BACKLOG, 128)

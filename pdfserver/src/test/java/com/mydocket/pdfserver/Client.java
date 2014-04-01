@@ -48,20 +48,39 @@ public class Client {
 		pw.write(newline);
 		pw.flush();
 	}
+
 	
 	public String readLine() throws Exception {
+		return readSome(true);
+	}
+	public String readSome(boolean considerNewline) throws Exception {
 		StringBuffer value = new StringBuffer();
 		int next = -1;
-		boolean okay = true;
-		while (okay) {
+		boolean reading = true;
+		while (reading) {
 			next = input.read();
-			if (next == -1 || next == newline) {
-				okay = false;
+			if (next == -1 || (considerNewline && (next == newline))) {
+				reading = false;
 			} else {
 				value.append((char) next);
 			}
 		}
 		return value.toString();
+	}
+	
+	public String readRest() throws Exception {
+		return readSome(false);
+	}
+	
+	public void readSizedContent(OutputStream stream) throws Exception {
+		String sSize = readLine();
+		long size    = Long.parseLong(sSize);
+		
+		// TODO: more efficient?
+		for (long i = 0; i < size; i++) {
+			stream.write(input.read());
+		}
+		stream.close();
 	}
 	
 	

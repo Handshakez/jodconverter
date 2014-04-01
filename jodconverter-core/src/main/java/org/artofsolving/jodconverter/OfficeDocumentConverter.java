@@ -53,21 +53,25 @@ public class OfficeDocumentConverter {
         this.defaultLoadProperties = defaultLoadProperties;
     }
 
+    public  Map<String,?> getDefaultLoadProperties() {
+    	return this.defaultLoadProperties;
+    }
+    
     public DocumentFormatRegistry getFormatRegistry() {
         return formatRegistry;
     }
 
     public void convert(File inputFile, File outputFile) throws OfficeException {
         String outputExtension = FilenameUtils.getExtension(outputFile.getName());
-        DocumentFormat outputFormat = formatRegistry.getFormatByExtension(outputExtension);
+        DocumentFormat outputFormat = getFormatRegistry().getFormatByExtension(outputExtension);
         convert(inputFile, outputFile, outputFormat);
     }
 
     public void convert(File inputFile, File outputFile, DocumentFormat outputFormat) throws OfficeException {
         String inputExtension = FilenameUtils.getExtension(inputFile.getName());
-        DocumentFormat inputFormat = formatRegistry.getFormatByExtension(inputExtension);
+        DocumentFormat inputFormat = getFormatRegistry().getFormatByExtension(inputExtension);
         StandardConversionTask conversionTask = new StandardConversionTask(inputFile, outputFile, outputFormat);
-        conversionTask.setDefaultLoadProperties(defaultLoadProperties);
+        conversionTask.setDefaultLoadProperties(getDefaultLoadProperties());
         conversionTask.setInputFormat(inputFormat);
         officeManager.execute(conversionTask);
     }
