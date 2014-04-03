@@ -4,6 +4,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
+import org.artofsolving.jodconverter.office.OfficeManager;
 
 public class Console {
 
@@ -12,9 +13,12 @@ public class Console {
 	
 	public static final String OPT_PORT       = "port";
 	public static final String OPT_PORT_SHORT = "p";
+	public static final int    DFLT_PORT      = 7001;
 
-	public static final String OPT_OO_PORT     = "oo-port";
-	public static final String OPT_OO_HOME     = "oo-home";
+	public static final String OPT_OO_PORT     = "ooport";
+	public static final int    DFLT_OO_PORT    = 7007;
+	
+	public static final String OPT_OO_HOME     = "oohome";
 	
 	
 	
@@ -38,25 +42,43 @@ public class Console {
 		MoreOptions opts = buildOptions();
 		CommandLine cmd  = buildCommandLine(opts, args);
 		
-		int serverPort = getInt(cmd, OPT_PORT, 7001);
-		int ooPort     = getInt(cmd, OPT_OO_PORT, 7007);
+		int serverPort = getInt(cmd, OPT_PORT, DFLT_PORT);
+		int ooPort     = getInt(cmd, OPT_OO_PORT, DFLT_OO_PORT);
 
 		// spin up open office server
 		DefaultOfficeManagerConfiguration ooconfig = new DefaultOfficeManagerConfiguration();
 		ooconfig.setPortNumber(ooPort);
 		ooconfig.setOfficeHome(cmd.getOptionValue(OPT_OO_HOME));
+
+		final OfficeManager manager = ooconfig.buildOfficeManager();
+		manager.start();
+		addHook(manager);
 		
+		Server server = new Server(serverPort, manager);
+		// TODO: so... are we going to zombify OO all the time here?
+		server.run();
 		return 0;
 	}
+	
+	private void addHook(final OfficeManager manager) {
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+				manager.stop();
+			}
+		};
+		Runtime.getRuntime().addShutdownHook(t);
+	}
+	
 	
 	private MoreOptions buildOptions() {
 		MoreOptions opts = new MoreOptions();
 		
 		opts.addOption(OPT_HELP, OPT_HELP_SHORT, false, "This messsage");
-		opts.addOption(OPT_PORT, OPT_PORT_SHORT, true, "Server port to listen on");
+		opts.addOption(OPT_PORT, OPT_PORT_SHORT, true, "Server port to listen on (" + DFLT_PORT + ")");
 		
-		opts.addRequired(OPT_OO_PORT, "Local port to run the OpenOffice server on");
-		opts.addRequired(OPT_OO_HOME, "Local path to OpenOffice install");
+		opts.addOption(OPT_OO_PORT, true, "Local port to run the OpenOffice server on (" + DFLT_OO_PORT + ")");
+		opts.addRequired(OPT_OO_HOME, "Local path soffice directory -- this is the OpenOffice install");
 		
 		return opts;
 	}

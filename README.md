@@ -69,6 +69,11 @@ $ sudo dpkg -i *deb
 
 If building, also install maven either via `brew` or `apt-get`
 
+## Building
+
+There are three projects in here.  jod-core and pdfserver are the ones we care about.  Either due to Maven's stupidness or my ignorance, the projects build independently of each other.  The poorly named script `both` in the root directory will build all three projects.
+
+Pro tip: to get (most of)  the sources for the jars, so you can hook them up in your IDE, run `mvn dependency:sources`.  This will then copy the jars into your ~/.m2 directory (e.g. `~/.m2/repository/io/netty//netty-all//4.0.17.Final/` now has both `netty-all-4.0.17.Final.jar` and `netty-all-4.0.17.Final-sources.jar`.
 
 ## Architecture
 
