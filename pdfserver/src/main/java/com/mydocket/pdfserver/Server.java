@@ -13,6 +13,8 @@ import org.artofsolving.jodconverter.office.OfficeManager;
 
 import com.mydocket.pdfmaker.codec.CommandDecoder;
 import com.mydocket.pdfmaker.codec.ConversionResultEncoder;
+import com.mydocket.pdfmaker.codec.ErrorResultEncoder;
+import com.mydocket.pdfmaker.codec.FileResultEncoder;
 
 public class Server {
 	
@@ -47,6 +49,8 @@ public class Server {
 								// en/decoders have to be added before handler (??)
 								new CommandDecoder(), 
 								new ConversionResultEncoder(),
+//								new FileResultEncoder(),
+//								new ErrorResultEncoder(),
 								new CommandHandler(Server.this.officeManager)
 								);
 					}

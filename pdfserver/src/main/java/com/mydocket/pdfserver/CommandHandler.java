@@ -12,14 +12,13 @@ import com.mydocket.pdfmaker.command.HelloCommand;
 import com.mydocket.pdfmaker.command.ICommand;
 import com.mydocket.pdfmaker.command.PushCommand;
 import com.mydocket.pdfmaker.command.StopCommand;
-import com.mydocket.pdfmaker.converter.CommandAdapter;
-import com.mydocket.pdfmaker.converter.ConversionResult;
+import com.mydocket.pdfmaker.converter.FileConverter;
 
 public class CommandHandler extends ChannelInboundHandlerAdapter {
-	private CommandAdapter adapter = null;
+	private FileConverter converter = null;
 	
 	public CommandHandler(OfficeManager officeManager) {
-		this.adapter = new CommandAdapter(officeManager);
+		this.converter = new FileConverter(officeManager);
 	}
 	
 	
@@ -36,10 +35,9 @@ public class CommandHandler extends ChannelInboundHandlerAdapter {
 			ctx.close();
 			f.addListener(ChannelFutureListener.CLOSE);
 		} else if (cmd instanceof PushCommand) {
-			ConversionResult result = adapter.consume((PushCommand) cmd);
+			PushCommand push = (PushCommand) cmd;
+			converter.convert(ctx, push.getContent());
 		    //this.println(ctx, "Push: Was Error? " + result.isError());
-		    ChannelFuture f = ctx.writeAndFlush(result);
-		    f.addListener(ChannelFutureListener.CLOSE);
 			//this.println(ctx, "Push.");
 			//this.println(ctx, "Size2: " + ((PushCommand) cmd).getContent());
 		}

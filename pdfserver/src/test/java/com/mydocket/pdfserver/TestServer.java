@@ -176,15 +176,8 @@ public class TestServer {
 			}
 		}
 		
-		msg = c.readLine();
-		if (msg.equals("1")) {
-			System.out.println("The rest: >>>>>>");
-			System.out.println(c.readRest());
-			System.out.println("<<<<<<<<<<<<<<<<");
-		}
-		assertEquals("0", msg);
-		c.readSizedContent(new FileOutputStream("/tmp/thumbnail.png"));
-		c.readSizedContent(new FileOutputStream("/tmp/converted.pdf"));
+		assertTrue("Thumbnail failed to read", c.readSizedContent(new FileOutputStream("/tmp/thumbnail.png")));
+		assertTrue("Preview failed to read", c.readSizedContent(new FileOutputStream("/tmp/converted.pdf")));
 		
 		
 //		c.sendLine("STOP");

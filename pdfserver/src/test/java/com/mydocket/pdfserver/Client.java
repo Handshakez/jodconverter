@@ -72,15 +72,26 @@ public class Client {
 		return readSome(false);
 	}
 	
-	public void readSizedContent(OutputStream stream) throws Exception {
-		String sSize = readLine();
-		long size    = Long.parseLong(sSize);
-		
-		// TODO: more efficient?
-		for (long i = 0; i < size; i++) {
-			stream.write(input.read());
+	public boolean readSizedContent(OutputStream stream) throws Exception {
+		boolean okay = true;
+		String status = readLine();
+		if (! status.equals("0")) {
+			okay = false;
+			System.out.println("Status was: " + status);
+			System.out.println("The rest: >>>>>>");
+			System.out.println(readRest());
+			System.out.println("<<<<<<<<<<<<<<<<");
+		} else {
+			String sSize = readLine();
+			long size    = Long.parseLong(sSize);
+			
+			// TODO: more efficient?
+			for (long i = 0; i < size; i++) {
+				stream.write(input.read());
+			}
+			stream.close();
 		}
-		stream.close();
+		return okay;
 	}
 	
 	

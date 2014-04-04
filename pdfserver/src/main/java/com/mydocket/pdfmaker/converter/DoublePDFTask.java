@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.FilenameUtils;
 import org.artofsolving.jodconverter.OfficeDocumentUtils;
@@ -17,7 +16,10 @@ import org.artofsolving.jodconverter.StandardConversionTask;
 import org.artofsolving.jodconverter.document.DocumentFamily;
 import org.artofsolving.jodconverter.document.DocumentFormat;
 import org.artofsolving.jodconverter.document.DocumentFormatRegistry;
+import org.artofsolving.jodconverter.office.OfficeContext;
 import org.artofsolving.jodconverter.office.OfficeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.star.frame.XStorable;
 import com.sun.star.io.IOException;
@@ -26,18 +28,18 @@ import com.sun.star.task.ErrorCodeIOException;
 
 public class DoublePDFTask extends StandardConversionTask {
 
-	// TODO: slf4j?
-    private final Logger logger = Logger.getLogger(getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(DoublePDFTask.class);
 	
 	private DocumentFormat allPageFormat = AllPagesFormat.getInstance();
 	private DocumentFormat onePageFormat = SinglePageFormat.getInstance();
 
 	private File baseOutputFile;
 	
-	public File onePagePdf;
-	public File thumbnail;
-	public File allPagePdf;
+//	public File onePagePdf;
+//	public File thumbnail;
+//	public File allPagePdf;
 	
+	private Observer observer;
 	
 	
 	/**
@@ -49,9 +51,10 @@ public class DoublePDFTask extends StandardConversionTask {
 	 * @param inputFile
 	 * @param outputFile
 	 */
-	public DoublePDFTask(File inputFile, File outputFile, DocumentFormatRegistry formatRegistry, Map<String, ?> loadProperties) {
+	public DoublePDFTask(Observer observer, File inputFile, File outputFile, DocumentFormatRegistry formatRegistry, Map<String, ?> loadProperties) {
 		super(inputFile, outputFile, null);
 		this.baseOutputFile = outputFile;
+		this.observer = observer;
 		
         String inputExtension = FilenameUtils.getExtension(inputFile.getName());
         DocumentFormat inputFormat = formatRegistry.getFormatByExtension(inputExtension);
@@ -63,12 +66,13 @@ public class DoublePDFTask extends StandardConversionTask {
 	@Override
     protected void modifyDocument(XComponent document) throws OfficeException {
         Map<String,?> firstPageOnly = getStoreProperties(this.onePageFormat, document);
-        this.onePagePdf = getExtensionFile(this.baseOutputFile, "_onepage.pdf");
-        storeDocument(document, firstPageOnly, this.onePagePdf);
+        File onePagePdf = getExtensionFile(this.baseOutputFile, "_onepage.pdf");
+        storeDocument(document, firstPageOnly, onePagePdf);
         
         // now, let's also imagemagick that stuff
         try {
-        	this.thumbnail = doThumb(this.baseOutputFile, this.onePagePdf);
+        	File thumbnail = doThumb(this.baseOutputFile, onePagePdf);
+        	observer.observe(thumbnail);
         } catch (Exception e) {
         	throw new OfficeException("Error generating thumbnail", e);
         }
@@ -87,7 +91,7 @@ public class DoublePDFTask extends StandardConversionTask {
 				thumb.getAbsolutePath()
 		};
 		
-		logger.finest("Converter command: " + cmd);
+		logger.debug("Converter command: " + cmd);
 		
 		// if you get a "can't find convert", make sure to add /usr/local/bin to the path
 		ProcessBuilder pb = new ProcessBuilder(cmd);
@@ -99,9 +103,9 @@ public class DoublePDFTask extends StandardConversionTask {
 
         p.waitFor();
 		if (p.exitValue() != 0) {
-			logger.warning("Thumbnail exited with non-zero status: " + p.exitValue());
-			logger.warning("Stderr is " + stderr);
-			logger.warning("Stdout is " + stdout);
+			logger.warn("Thumbnail exited with non-zero status: " + p.exitValue());
+			logger.warn("Stderr is " + stderr);
+			logger.warn("Stdout is " + stdout);
 		}
 		return thumb;
 	}
@@ -116,7 +120,7 @@ public class DoublePDFTask extends StandardConversionTask {
         br.close();
 		String rv = sb.toString();
 		if (rv.length() > 0) {
-			logger.finest("Stream '" + name + "': " + rv);
+			logger.trace("Stream '" + name + "': " + rv);
 		}
 		
 		return rv;
@@ -126,8 +130,9 @@ public class DoublePDFTask extends StandardConversionTask {
     @Override
     protected void storeDocument(XComponent document, File outputFile) throws OfficeException {
         Map<String,?> fullPdf = getStoreProperties(this.allPageFormat, document);
-       this.allPagePdf = getExtensionFile(this.baseOutputFile, "_full.pdf");
-    	storeDocument(document, fullPdf, this.allPagePdf);
+        File allPagePdf = getExtensionFile(this.baseOutputFile, "_full.pdf");
+    	storeDocument(document, fullPdf, allPagePdf);
+    	observer.observe(allPagePdf);
     }
     
     protected void storeDocument(XComponent document, Map<String, ?> storeProperties, File outputFile) throws OfficeException {
