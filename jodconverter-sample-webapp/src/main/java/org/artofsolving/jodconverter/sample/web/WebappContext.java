@@ -1,7 +1,6 @@
 package org.artofsolving.jodconverter.sample.web;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 
@@ -10,6 +9,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.artofsolving.jodconverter.OfficeDocumentConverter;
 import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
 import org.artofsolving.jodconverter.office.OfficeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WebappContext {
 
@@ -18,7 +19,10 @@ public class WebappContext {
 	public static final String PARAMETER_OFFICE_PROFILE = "office.profile";
 	public static final String PARAMETER_FILEUPLOAD_FILE_SIZE_MAX = "fileupload.fileSizeMax";
 
-	private final Logger logger = Logger.getLogger(getClass().getName());
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(WebappContext.class);
+//	private final Logger logger = Logger.getLogger(getClass().getName());
 
 	private static final String KEY = WebappContext.class.getName();
 
@@ -35,7 +39,7 @@ public class WebappContext {
 			fileUpload.setFileSizeMax(Integer.parseInt(fileSizeMax));
 			logger.info("max file upload size set to " + fileSizeMax);
 		} else {
-			logger.warning("max file upload size not set");
+			logger.warn("max file upload size not set");
 		}
 
 		DefaultOfficeManagerConfiguration configuration = new DefaultOfficeManagerConfiguration();

@@ -14,18 +14,20 @@ package org.artofsolving.jodconverter.office;
 
 import static org.artofsolving.jodconverter.process.ProcessManager.PID_NOT_FOUND;
 import static org.artofsolving.jodconverter.process.ProcessManager.PID_UNKNOWN;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.artofsolving.jodconverter.process.ProcessManager;
 import org.artofsolving.jodconverter.process.ProcessQuery;
 import org.artofsolving.jodconverter.util.PlatformUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class OfficeProcess {
 
@@ -39,7 +41,10 @@ class OfficeProcess {
     private Process process;
     private long pid = PID_UNKNOWN;
 
-    private final Logger logger = Logger.getLogger(getClass().getName());
+    
+	private static final Logger logger = LoggerFactory
+			.getLogger(OfficeProcess.class);
+//    private final Logger logger = Logger.getLogger(getClass().getName());
 
     public OfficeProcess(File officeHome, UnoUrl unoUrl, String[] runAsArgs, File templateProfileDir, File workDir, ProcessManager processManager) {
         this.officeHome = officeHome;
@@ -100,7 +105,7 @@ class OfficeProcess {
 
     private void prepareInstanceProfileDir() throws OfficeException {
         if (instanceProfileDir.exists()) {
-            logger.warning(String.format("profile dir '%s' already exists; deleting", instanceProfileDir));
+            logger.warn(String.format("profile dir '%s' already exists; deleting", instanceProfileDir));
             deleteProfileDir();
         }
         if (templateProfileDir != null) {
@@ -119,9 +124,9 @@ class OfficeProcess {
             } catch (IOException ioException) {
                 File oldProfileDir = new File(instanceProfileDir.getParentFile(), instanceProfileDir.getName() + ".old." + System.currentTimeMillis());
                 if (instanceProfileDir.renameTo(oldProfileDir)) {
-                    logger.warning("could not delete profileDir: " + ioException.getMessage() + "; renamed it to " + oldProfileDir);
+                    logger.warn("could not delete profileDir: " + ioException.getMessage() + "; renamed it to " + oldProfileDir);
                 } else {
-                    logger.severe("could not delete profileDir: " + ioException.getMessage());
+                    logger.error("could not delete profileDir: " + ioException.getMessage());
                 }
             }
         }
@@ -131,7 +136,7 @@ class OfficeProcess {
         // see http://wiki.services.openoffice.org/wiki/ODF_Toolkit/Efforts/Three-Layer_OOo
         File basisLink = new File(officeHome, "basis-link");
         if (!basisLink.isFile()) {
-            logger.fine("no %OFFICE_HOME%/basis-link found; assuming it's OOo 2.x and we don't need to append URE and Basic paths");
+            logger.info("no %OFFICE_HOME%/basis-link found; assuming it's OOo 2.x and we don't need to append URE and Basic paths");
             return;
         }
         String basisLinkText = FileUtils.readFileToString(basisLink).trim();
@@ -151,7 +156,7 @@ class OfficeProcess {
             }
         }
         String path = environment.get(pathKey) + ";" + ureBin.getAbsolutePath() + ";" + basisProgram.getAbsolutePath();
-        logger.fine(String.format("setting %s to \"%s\"", pathKey, path));
+        logger.info(String.format("setting %s to \"%s\"", pathKey, path));
         environment.put(pathKey, path);
     }
 

@@ -16,9 +16,10 @@ import java.io.File;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import org.artofsolving.jodconverter.process.ProcessManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class ProcessPoolOfficeManager implements OfficeManager {
 
@@ -28,7 +29,10 @@ class ProcessPoolOfficeManager implements OfficeManager {
 
     private volatile boolean running = false;
 
-    private final Logger logger = Logger.getLogger(ProcessPoolOfficeManager.class.getName());
+    
+	private static final Logger logger = LoggerFactory
+			.getLogger(ProcessPoolOfficeManager.class);
+//    private final Logger logger = Logger.getLogger(ProcessPoolOfficeManager.class.getName());
 
     public ProcessPoolOfficeManager(File officeHome, UnoUrl[] unoUrls, String[] runAsArgs, File templateProfileDir, File workDir,
             long retryTimeout, long taskQueueTimeout, long taskExecutionTimeout, int maxTasksPerProcess,

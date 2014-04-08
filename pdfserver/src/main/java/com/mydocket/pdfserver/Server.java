@@ -13,8 +13,6 @@ import org.artofsolving.jodconverter.office.OfficeManager;
 
 import com.mydocket.pdfmaker.codec.CommandDecoder;
 import com.mydocket.pdfmaker.codec.ConversionResultEncoder;
-import com.mydocket.pdfmaker.codec.ErrorResultEncoder;
-import com.mydocket.pdfmaker.codec.FileResultEncoder;
 
 public class Server {
 	

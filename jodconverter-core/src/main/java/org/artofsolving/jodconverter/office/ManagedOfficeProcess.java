@@ -16,8 +16,9 @@ import java.net.ConnectException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.star.frame.XDesktop;
 import com.sun.star.lang.DisposedException;
@@ -33,7 +34,10 @@ class ManagedOfficeProcess {
 
 	private ExecutorService executor = Executors.newSingleThreadExecutor(new NamedThreadFactory("OfficeProcessThread"));
 
-	private final Logger logger = Logger.getLogger(getClass().getName());
+	
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(ManagedOfficeProcess.class);
 
 	public ManagedOfficeProcess(ManagedOfficeProcessSettings settings) throws OfficeException {
 		this.settings = settings;
@@ -102,7 +106,7 @@ class ManagedOfficeProcess {
 					doEnsureProcessExited();
 					doStartProcessAndConnect();
 				} catch (OfficeException officeException) {
-					logger.log(Level.SEVERE, "could not restart process", officeException);
+					logger.error("could not restart process", officeException);
 				}
 			}
 		});
@@ -123,7 +127,7 @@ class ManagedOfficeProcess {
 						} else if (exitCode.equals(EXIT_CODE_NEW_INSTALLATION)) {
 							// restart and retry later
 							// see http://code.google.com/p/jodconverter/issues/detail?id=84
-							logger.log(Level.WARNING, "office process died with exit code 81; restarting it");
+							logger.warn("office process died with exit code 81; restarting it");
 							process.start(true);
 							throw new TemporaryException(connectException);
 						} else {

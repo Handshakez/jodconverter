@@ -16,7 +16,9 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.bridge.XBridge;
@@ -33,6 +35,10 @@ import com.sun.star.uno.XComponentContext;
 
 class OfficeConnection implements OfficeContext {
 
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(OfficeConnection.class);
+	
     private static AtomicInteger bridgeIndex = new AtomicInteger();
 
     private final UnoUrl unoUrl;
@@ -59,7 +65,6 @@ class OfficeConnection implements OfficeContext {
         }
     };
 
-    private final Logger logger = Logger.getLogger(getClass().getName());
 
     public OfficeConnection(UnoUrl unoUrl) {
         this.unoUrl = unoUrl;
@@ -70,7 +75,7 @@ class OfficeConnection implements OfficeContext {
     }
 
     public void connect() throws ConnectException {
-        logger.fine(String.format("connecting with connectString '%s'", unoUrl));
+        logger.info(String.format("connecting with connectString '%s'", unoUrl));
         try {
             XComponentContext localContext = Bootstrap.createInitialComponentContext(null);
             XMultiComponentFactory localServiceManager = localContext.getServiceManager();
@@ -102,7 +107,7 @@ class OfficeConnection implements OfficeContext {
     }
 
     public synchronized void disconnect() {
-        logger.fine(String.format("disconnecting: '%s'", unoUrl));
+        logger.info(String.format("disconnecting: '%s'", unoUrl));
         bridgeComponent.dispose();
     }
 

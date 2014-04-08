@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,12 +21,17 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.artofsolving.jodconverter.OfficeDocumentConverter;
 import org.artofsolving.jodconverter.document.DocumentFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConverterServlet extends HttpServlet {
 
     private static final long serialVersionUID = -591469426224201748L;
 
-    private final Logger logger = Logger.getLogger(getClass().getName());
+    
+	private static final Logger logger = LoggerFactory
+			.getLogger(ConverterServlet.class);
+//    private final Logger logger = Logger.getLogger(getClass().getName());
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -79,7 +83,7 @@ public class ConverterServlet extends HttpServlet {
             
             sendFile(thumbnailFile, response);
         } catch (Exception exception) {
-            logger.severe(String.format("failed conversion: %s [%db] to %s; %s; input file: %s", inputExtension, inputFile.length(), intermediateExtension, exception, inputFile.getName()));
+            logger.error(String.format("failed conversion: %s [%db] to %s; %s; input file: %s", inputExtension, inputFile.length(), intermediateExtension, exception, inputFile.getName()));
         	throw new ServletException("conversion failed", exception);
         } finally {
         	for (File f : files) {
@@ -107,7 +111,7 @@ public class ConverterServlet extends HttpServlet {
 				thumb.getAbsolutePath()
 		};
 		
-		logger.finest("Converter command: " + cmd);
+		logger.debug("Converter command: " + cmd);
 		
 		ProcessBuilder pb = new ProcessBuilder(cmd);
 		Process p = pb.start();
@@ -118,7 +122,7 @@ public class ConverterServlet extends HttpServlet {
 
         p.waitFor();
 		if (p.exitValue() != 0) {
-			logger.warning("Thumbnail exited with non-zero status: " + p.exitValue());
+			logger.warn("Thumbnail exited with non-zero status: " + p.exitValue());
 		}
 		// assuming all that is fine...
     	response.setContentType("image/png");
@@ -135,7 +139,7 @@ public class ConverterServlet extends HttpServlet {
 	        br.close();
 			String rv = sb.toString();
 			if (rv.length() > 0) {
-				logger.finest("Stream '" + name + "': " + rv);
+				logger.warn("Stream '" + name + "': " + rv);
 			}
 			
 			return rv;
