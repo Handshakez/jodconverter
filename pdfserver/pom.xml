@@ -74,6 +74,28 @@
               </execution>
             </executions>
         </plugin>
+        <!-- runs the build.xml in this directory. This is the suggested way of doing things
+            http://maven.apache.org/plugins/maven-antrun-plugin/run-mojo.html
+         For reals? -->
+        <!-- well, this won't work anyway unless you set up distributionManagement -->
+        <!--
+        <plugin>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <executions>
+            <execution>
+              <phase>deploy</phase>
+              <configuration>
+                <target>
+                   <ant/>
+                </target>
+              </configuration>
+              <goals>
+                <goal>run</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        -->
     </plugins>
   </build>
 </project>

@@ -104,7 +104,32 @@ Or with successs:
 0\n
 <thumbnail size in bytes are string>\n
 <thumbnail data>
+0\n
 <full file size in bytes are string>\n
 <full file data>
 
+NB that the procedure may fail after the thumbnail.  In which case the client will received a "1" and a string containing the error message.
 
+## Special Install Considerations
+
+(work in progress as of 4/7/2014)
+
+Under Unix, ports underneath 1024 are restricted.  They can only be bound by users with root privs. However, our AWS config only has a couple of ports open to the outside world, and these are all in the restricted areas.  Some solutions to this are
+
+- run the server as root - security riddled
+- start the server as root, then drop privs to another user - requires application support (which I have not written)
+- proxy requests via nginx - requires that the requests be (GASP) http, which I have avoided
+- forward requests coming in on port 80 to a different port via `iptables` - lets any user listen in on the unrestricted port
+
+I have chosen the latter.  The `iptables` configuration is taken from http://serverfault.com/questions/112795/how-can-i-run-a-server-on-linux-on-port-80-as-a-normal-user.  It is not obvious.
+
+```
+# iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 7001
+# iptables -t nat -I OUTPUT -p tcp -d 127.0.0.1 --dport 80 -j REDIRECT --to-ports 7001
+```
+
+You can list it all out under
+
+```
+# iptables -t nat --line-numbers -n -L
+```

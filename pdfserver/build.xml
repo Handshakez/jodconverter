@@ -1,0 +1,23 @@
+<project name='pdfserver' basedir="." default="deploy">
+
+    <property name="shank.home"      value="${user.home}/shank"/>
+    <property name="mvn.target.dir"  value="target"/>
+    <property name="mvn.src.dir"     value="src"/>
+
+    <target name="deploy">
+        <mkdir dir="${shank.home}/lib"/>
+
+        <copy todir="${shank.home}/lib">
+            <fileset dir="${mvn.target.dir}" includes="*.jar"/>
+            <fileset dir="${mvn.target.dir}/lib" includes="*.jar"/>
+        </copy>
+
+        <!-- have to use exec cp here since <copy/> doesn't preserve file perms -->
+        <mkdir dir="${shank.home}/bin"/>
+        <exec executable="cp">
+            <arg value="${mvn.src.dir}/main/bash/bin/shank"/>
+            <arg value="${shank.home}/bin"/>
+        </exec>
+
+    </target>
+</project>
