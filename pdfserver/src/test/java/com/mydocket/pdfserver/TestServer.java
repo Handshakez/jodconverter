@@ -145,6 +145,9 @@ public class TestServer {
 				break;
 			}
 		}
+        if (found == null) {
+            fail("Could not find file named '" + fname + "'");
+        }
 		return found;
 	}
 	
