@@ -32,7 +32,6 @@ class ProcessPoolOfficeManager implements OfficeManager {
     
 	private static final Logger logger = LoggerFactory
 			.getLogger(ProcessPoolOfficeManager.class);
-//    private final Logger logger = Logger.getLogger(ProcessPoolOfficeManager.class.getName());
 
     public ProcessPoolOfficeManager(File officeHome, UnoUrl[] unoUrls, String[] runAsArgs, File templateProfileDir, File workDir,
             long retryTimeout, long taskQueueTimeout, long taskExecutionTimeout, int maxTasksPerProcess,
