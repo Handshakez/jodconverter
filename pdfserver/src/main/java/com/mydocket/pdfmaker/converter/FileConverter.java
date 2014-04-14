@@ -1,12 +1,8 @@
 package com.mydocket.pdfmaker.converter;
 
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -27,6 +23,8 @@ public class FileConverter {
 	private DocumentFormatRegistry formatRegistry = null;
 	private Map<String, ?> loadProperties = null;
 	
+	private ThumbAndReturn thumbAndReturn = new ThumbAndReturn();
+	
 	// EGAD THIS IS BURIED DEEPLY
 	public FileConverter(OfficeManager officeManager) {
 		this.officeManager = officeManager;
@@ -41,11 +39,18 @@ public class FileConverter {
 		Observer observer = new Observer(ctx);
 		try {
 			String baseName = FilenameUtils.getBaseName(input.getName());
-			File tempdir    = FileUtils.getTempDirectory();
-			File outputFile = new File(tempdir, baseName + "_conv");
+			String extension = FilenameUtils.getExtension(input.getName());
 			
-	        DoublePDFTask task = new DoublePDFTask(observer, input, outputFile, this.formatRegistry, this.loadProperties);
-	        officeManager.execute(task);
+			if (extension.equalsIgnoreCase("PDF")) {
+				// do not try to convert it
+				thumbAndReturn.execute(observer, input);
+			} else {
+				File tempdir    = FileUtils.getTempDirectory();
+				File outputFile = new File(tempdir, baseName + "_conv");
+				
+		        DoublePDFTask task = new DoublePDFTask(observer, input, outputFile, this.formatRegistry, this.loadProperties);
+		        officeManager.execute(task);
+			}
 		} catch (Exception e) {
 			// TODO: possible to append this after we've written out both files
 			// successfully.  Need to test.

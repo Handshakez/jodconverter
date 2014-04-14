@@ -156,38 +156,52 @@ public class TestServer {
 	public void testFileUpload() throws Exception {
 		String fname = "Handshakez Salesforce API.docx";
 		File docx = findFile(fname);
-		long length = docx.length();
 		
-		String msg = null;
 		Client c = new Client(port);
-		c.sendLine("PUSH");
-		c.sendLine(fname);
-		c.sendLine("" + length);
+		c.sendFile(docx);
+//		c.sendLine("PUSH");
+//		c.sendLine(fname);
+//		c.sendLine("" + length);
+//		
+//		FileInputStream fis = null;
+//		try {
+//			fis = new FileInputStream(docx);
+//			byte[] buffer = new byte[4096];
+//			int size = 0;
+//			while ((size = fis.read(buffer)) != -1) {
+//				c.output.write(buffer,0, size);
+//			}
+//			c.output.flush();
+//		} finally {
+//			if (fis != null) {
+//				fis.close();
+//			}
+//		}
 		
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(docx);
-			byte[] buffer = new byte[4096];
-			int size = 0;
-			while ((size = fis.read(buffer)) != -1) {
-				c.output.write(buffer,0, size);
-			}
-			c.output.flush();
-		} finally {
-			if (fis != null) {
-				fis.close();
-			}
-		}
-		
-		assertTrue("Thumbnail failed to read", c.readSizedContent(new FileOutputStream("/tmp/thumbnail.png")));
-		assertTrue("Preview failed to read", c.readSizedContent(new FileOutputStream("/tmp/converted.pdf")));
-		
-		
-//		c.sendLine("STOP");
-//		msg = c.readLine();
-//		System.out.println(msg);
-//		assertEquals("Goodbye.", msg);
+		assertTrue("Docx Thumbnail failed to read", c.readSizedContent(new FileOutputStream("/tmp/thumbnail.png")));
+		assertTrue("Docx Preview failed to read", c.readSizedContent(new FileOutputStream("/tmp/converted.pdf")));
 		c.close();
+	}
+	
+	@Test
+	public void testPdfUpload() throws Exception {
+		// PDFs should generate a thumbnail but not a different PDF file
+
+		String fname = "Saas Top 250 - Montclair Advisors.pdf";
+		File pdf = findFile(fname);
+		
+		String previewName = "/tmp/converted.pdf";
+		
+		Client c = new Client(port);
+		c.sendFile(pdf);
+			
+		assertTrue("PDF Thumbnail failed to read", c.readSizedContent(new FileOutputStream("/tmp/thumbnail.png")));
+		assertTrue("PDF Preview failed to read", c.readSizedContent(new FileOutputStream(previewName)));
+		c.close();
+		
+		File pdfPreview = new File(previewName);
+		assertTrue("Preview file '" + previewName + "' does not exist", pdfPreview.exists());
+		assertEquals("Preview length does not equal submitted length", pdf.length(), pdfPreview.length());
 	}
 	
 }

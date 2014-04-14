@@ -1,5 +1,7 @@
 package com.mydocket.pdfserver;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -49,6 +51,27 @@ public class Client {
 		pw.flush();
 	}
 
+	public void sendFile(File file) throws Exception {
+		sendLine("PUSH");
+		sendLine(file.getName());
+		sendLine("" + file.length());
+		
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(file);
+			byte[] buffer = new byte[4096];
+			int size = 0;
+			while ((size = fis.read(buffer)) != -1) {
+				this.output.write(buffer,0, size);
+			}
+			this.output.flush();
+		} finally {
+			if (fis != null) {
+				fis.close();
+			}
+		}
+	}
+	
 	
 	public String readLine() throws Exception {
 		return readSome(true);

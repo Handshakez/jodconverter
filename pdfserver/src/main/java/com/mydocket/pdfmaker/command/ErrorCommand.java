@@ -13,4 +13,8 @@ public class ErrorCommand implements ICommand {
 		return "ERRO";
 	}
 
+	public String getMessage() {
+		return this.msg;
+	}
+	
 }

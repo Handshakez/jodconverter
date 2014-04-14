@@ -20,7 +20,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.artofsolving.jodconverter.OfficeDocumentConverter;
-import org.artofsolving.jodconverter.document.DocumentFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +67,7 @@ public class ConverterServlet extends HttpServlet {
 
         List<File> files = this.fileList(outputFile, inputFile, thumbnailFile);
         try {
-            DocumentFormat outputFormat = converter.getFormatRegistry().getFormatByExtension(intermediateExtension);
+//            DocumentFormat outputFormat = converter.getFormatRegistry().getFormatByExtension(intermediateExtension);
         	long startTime = System.currentTimeMillis();
         	converter.convert(inputFile, outputFile);
         	long conversionTime = System.currentTimeMillis() - startTime;
@@ -100,6 +99,7 @@ public class ConverterServlet extends HttpServlet {
         return list;
 	}
 	
+	@SuppressWarnings("unused")
 	private void doThumb(File pdf, File thumb, String baseName, HttpServletResponse response) throws Exception {
 		// convert "$outpdf[0]" -flatten -resize "150x150" -colorspace 'rgb' $outjpg 2>/dev/null
 		String[] cmd = {
