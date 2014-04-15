@@ -67,7 +67,7 @@ $ sudo dpkg -i *deb
 *MacOs* `brew install imagemagick gs libtool`
 *Ubuntu* `apt-get install imagemagick`
 
-If building, also install maven either via `brew` or `apt-get`
+If building, also install maven and ant either via `brew` or `apt-get`
 
 ## Building
 
@@ -110,10 +110,11 @@ Or with successs:
 
 NB that the procedure may fail after the thumbnail.  In which case the client will received a "1" and a string containing the error message.
 
-## Special Install Considerations
+## Special Server Side Install Considerations
 
-(work in progress as of 4/7/2014)
+(work in progress as of 4/xi157/2014)
 
+### Binding to port 80
 Under Unix, ports underneath 1024 are restricted.  They can only be bound by users with root privs. However, our AWS config only has a couple of ports open to the outside world, and these are all in the restricted areas.  Some solutions to this are
 
 - run the server as root - security riddled
@@ -137,4 +138,36 @@ You can list it all out under
 If you want to delete them, use the line numbers and table names obtained from the previous command.  To delete line 2 from the PREROUTING table, do:
 ```
 # iptables -t nat -D PREROUTING 2
+```
+
+### Starting on system boot
+
+- Build the server code via maven as described above.  Then create the run time directory:
+
+```
+$ cd $SERVERHOME/pdfserver
+$ ant deploy
+```
+
+This will copy the jar files into `/home/ubuntu/shank/lib`.
+
+- install jsvc
+
+```
+$ sudo apt-get install jsvc
+```
+
+- Create the `init.d` script link and set to run on start
+
+```
+$ sudo ln -s $SERVERHOME/src/main/unix/init.d/shank /etc/init.d/shank
+$ sudo update-rc.d shank defaults
+```
+
+- Update `$javahome` in `/etc/init.d/shank` to reflect your JDK install.
+- The service will try to run as `www-data`.  Update the script if you desire to run as a different user.
+- Start the service and cat the output files to ensure all was well
+```
+$ sudo service shank start
+$ sudo cat /var/log/shank/*
 ```
