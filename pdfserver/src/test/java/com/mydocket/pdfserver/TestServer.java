@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
@@ -62,6 +63,35 @@ public class TestServer {
 		}
 	}
 	
+	/*
+	 * Some stuff to keep track of tmpfiles
+	 * tmpfiles = array list to delete
+	 * file_collector = rule that runs to delete the files
+	 * addTmp(String | File) = add tmp files to the array
+	 */
+	private ArrayList<String> tmpfiles = new ArrayList<String>();
+	
+	private String addTmp(String file) {
+		tmpfiles.add(file);
+		return file;
+	}
+	
+	
+	@Rule
+	public ExternalResource file_collector = new ExternalResource() {
+		@Override
+		protected void before() throws Throwable {
+			tmpfiles.clear();
+		}
+		
+		@Override
+		protected void after() {
+			for (String nm : tmpfiles) {
+				File f = new File(nm);
+				f.delete();
+			}
+		}
+	};
 	
 	
 	@Rule
@@ -161,27 +191,12 @@ public class TestServer {
 		
 		Client c = new Client(port);
 		c.sendFile(docx);
-//		c.sendLine("PUSH");
-//		c.sendLine(fname);
-//		c.sendLine("" + length);
-//		
-//		FileInputStream fis = null;
-//		try {
-//			fis = new FileInputStream(docx);
-//			byte[] buffer = new byte[4096];
-//			int size = 0;
-//			while ((size = fis.read(buffer)) != -1) {
-//				c.output.write(buffer,0, size);
-//			}
-//			c.output.flush();
-//		} finally {
-//			if (fis != null) {
-//				fis.close();
-//			}
-//		}
 		
-		assertTrue("Docx Thumbnail failed to read", c.readSizedContent(new FileOutputStream("/tmp/thumbnail.png")));
-		assertTrue("Docx Preview failed to read", c.readSizedContent(new FileOutputStream("/tmp/converted.pdf")));
+		String png = addTmp("/tmp/thumbnail.png");
+		String pdf = addTmp("/tmp/converted.pdf");
+		
+		assertTrue("Docx Thumbnail failed to read", c.readSizedContent(new FileOutputStream(png)));
+		assertTrue("Docx Preview failed to read", c.readSizedContent(new FileOutputStream(pdf)));
 		c.close();
 	}
 	
@@ -192,12 +207,13 @@ public class TestServer {
 		String fname = "Saas Top 250 - Montclair Advisors.pdf";
 		File pdf = findFile(fname);
 		
-		String previewName = "/tmp/converted.pdf";
+		String previewName = addTmp("/tmp/converted.pdf");
+		String thumbName = addTmp("/tmp/thumbnail.png");
 		
 		Client c = new Client(port);
 		c.sendFile(pdf);
 			
-		assertTrue("PDF Thumbnail failed to read", c.readSizedContent(new FileOutputStream("/tmp/thumbnail.png")));
+		assertTrue("PDF Thumbnail failed to read", c.readSizedContent(new FileOutputStream(thumbName)));
 		assertTrue("PDF Preview failed to read", c.readSizedContent(new FileOutputStream(previewName)));
 		c.close();
 		
