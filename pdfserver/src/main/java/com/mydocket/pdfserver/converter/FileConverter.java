@@ -50,6 +50,11 @@ public class FileConverter {
 				
 		        DoublePDFTask task = new DoublePDFTask(observer, input, outputFile, this.formatRegistry, this.loadProperties);
 		        officeManager.execute(task);
+		        
+		        // Now that you are done with it, delete the file.
+		        // It will delete itself on exit j.i.c.
+		        // NB: don't do this in the PDF case since we're going to return it back to the client
+		        input.delete();
 			}
 		} catch (Exception e) {
 			// TODO: possible to append this after we've written out both files
