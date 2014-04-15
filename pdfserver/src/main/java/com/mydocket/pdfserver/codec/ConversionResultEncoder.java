@@ -56,6 +56,8 @@ public class ConversionResultEncoder extends
 			}
 		} finally {
 			IOUtils.closeQuietly(fis);
+			// and delete the files once they have been sent down the wire
+			file.delete();
 		}
 	}
 	

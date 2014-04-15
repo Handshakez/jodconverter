@@ -67,6 +67,9 @@ public class DoublePDFTask extends StandardConversionTask {
         	observer.observe(thumbnail);
         } catch (Exception e) {
         	throw new OfficeException("Error generating thumbnail", e);
+        } finally {
+        	// delete the one pager
+        	onePagePdf.delete();
         }
         
     }

@@ -2,9 +2,6 @@ package com.mydocket.pdfserver;
 
 import org.artofsolving.jodconverter.office.OfficeManager;
 
-import com.mydocket.pdfserver.Console.HarmlessException;
-import com.mydocket.pdfserver.Console.QuietException;
-
 // This class is to run the server via jsvc process
 // http://commons.apache.org/proper/commons-daemon/jsvc.html
 public class Daemon {

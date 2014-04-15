@@ -11,6 +11,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
+// TODO: is this class used ?
 public class FileResultEncoder extends MessageToByteEncoder<FileResult> {
 
 	@Override

@@ -27,7 +27,6 @@ public class MakeAThumb {
 		};
 		
 		logger.debug("Converter command: " + cmd);
-		
 		// if you get a "can't find convert", make sure to add /usr/local/bin to the path
 		ProcessBuilder pb = new ProcessBuilder(cmd);
 		Process p = pb.start();
@@ -42,6 +41,7 @@ public class MakeAThumb {
 			logger.warn("Stderr is " + stderr);
 			logger.warn("Stdout is " + stdout);
 		}
+		
 		return thumb;
 	}
 	
