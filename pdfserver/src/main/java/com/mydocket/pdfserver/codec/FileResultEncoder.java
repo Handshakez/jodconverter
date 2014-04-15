@@ -1,11 +1,11 @@
-package com.mydocket.pdfmaker.codec;
+package com.mydocket.pdfserver.codec;
 
 import java.io.File;
 import java.io.FileInputStream;
 
 import org.apache.commons.io.IOUtils;
 
-import com.mydocket.pdfmaker.converter.results.FileResult;
+import com.mydocket.pdfserver.converter.results.FileResult;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

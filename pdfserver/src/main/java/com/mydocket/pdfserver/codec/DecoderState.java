@@ -1,4 +1,4 @@
-package com.mydocket.pdfmaker.codec;
+package com.mydocket.pdfserver.codec;
 
 public enum DecoderState {
 	READ_COMMAND,

@@ -1,6 +1,6 @@
-package com.mydocket.pdfmaker.codec;
+package com.mydocket.pdfserver.codec;
 
-import com.mydocket.pdfmaker.converter.results.ErrorResult;
+import com.mydocket.pdfserver.converter.results.ErrorResult;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

@@ -1,4 +1,4 @@
-package com.mydocket.pdfmaker.converter;
+package com.mydocket.pdfserver.converter;
 
 import java.util.HashMap;
 import java.util.Map;

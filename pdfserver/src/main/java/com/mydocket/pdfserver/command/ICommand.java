@@ -1,4 +1,4 @@
-package com.mydocket.pdfmaker.command;
+package com.mydocket.pdfserver.command;
 
 public interface ICommand {
 	public String getName();

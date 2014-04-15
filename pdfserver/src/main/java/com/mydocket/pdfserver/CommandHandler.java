@@ -8,11 +8,11 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import org.artofsolving.jodconverter.office.OfficeManager;
 
-import com.mydocket.pdfmaker.command.HelloCommand;
-import com.mydocket.pdfmaker.command.ICommand;
-import com.mydocket.pdfmaker.command.PushCommand;
-import com.mydocket.pdfmaker.command.StopCommand;
-import com.mydocket.pdfmaker.converter.FileConverter;
+import com.mydocket.pdfserver.command.HelloCommand;
+import com.mydocket.pdfserver.command.ICommand;
+import com.mydocket.pdfserver.command.PushCommand;
+import com.mydocket.pdfserver.command.StopCommand;
+import com.mydocket.pdfserver.converter.FileConverter;
 
 public class CommandHandler extends ChannelInboundHandlerAdapter {
 	private FileConverter converter = null;

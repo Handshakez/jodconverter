@@ -1,4 +1,4 @@
-package com.mydocket.pdfmaker.converter;
+package com.mydocket.pdfserver.converter;
 
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -6,9 +6,9 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.io.File;
 
-import com.mydocket.pdfmaker.converter.results.ErrorResult;
-import com.mydocket.pdfmaker.converter.results.FileResult;
-import com.mydocket.pdfmaker.converter.results.IConversionResult;
+import com.mydocket.pdfserver.converter.results.ErrorResult;
+import com.mydocket.pdfserver.converter.results.FileResult;
+import com.mydocket.pdfserver.converter.results.IConversionResult;
 
 public class Observer {
 

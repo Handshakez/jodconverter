@@ -1,4 +1,4 @@
-package com.mydocket.pdfmaker.converter;
+package com.mydocket.pdfserver.converter;
 
 import static org.artofsolving.jodconverter.office.OfficeUtils.cast;
 import static org.artofsolving.jodconverter.office.OfficeUtils.toUnoProperties;

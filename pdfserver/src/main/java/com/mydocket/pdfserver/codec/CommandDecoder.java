@@ -1,4 +1,4 @@
-package com.mydocket.pdfmaker.codec;
+package com.mydocket.pdfserver.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -6,11 +6,11 @@ import io.netty.handler.codec.ReplayingDecoder;
 
 import java.util.List;
 
-import com.mydocket.pdfmaker.command.ErrorCommand;
-import com.mydocket.pdfmaker.command.HelloCommand;
-import com.mydocket.pdfmaker.command.ICommand;
-import com.mydocket.pdfmaker.command.PushCommand;
-import com.mydocket.pdfmaker.command.StopCommand;
+import com.mydocket.pdfserver.command.ErrorCommand;
+import com.mydocket.pdfserver.command.HelloCommand;
+import com.mydocket.pdfserver.command.ICommand;
+import com.mydocket.pdfserver.command.PushCommand;
+import com.mydocket.pdfserver.command.StopCommand;
 
 public class CommandDecoder extends ReplayingDecoder<DecoderState> {
 

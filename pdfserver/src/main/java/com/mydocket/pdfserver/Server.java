@@ -12,8 +12,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 import org.artofsolving.jodconverter.office.OfficeManager;
 
-import com.mydocket.pdfmaker.codec.CommandDecoder;
-import com.mydocket.pdfmaker.codec.ConversionResultEncoder;
+import com.mydocket.pdfserver.codec.CommandDecoder;
+import com.mydocket.pdfserver.codec.ConversionResultEncoder;
 
 public class Server {
 	

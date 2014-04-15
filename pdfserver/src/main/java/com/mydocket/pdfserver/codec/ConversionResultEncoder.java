@@ -1,4 +1,4 @@
-package com.mydocket.pdfmaker.codec;
+package com.mydocket.pdfserver.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 
 import org.apache.commons.io.IOUtils;
 
-import com.mydocket.pdfmaker.converter.results.*;
+import com.mydocket.pdfserver.converter.results.*;
 
 public class ConversionResultEncoder extends
 		MessageToByteEncoder<IConversionResult> {

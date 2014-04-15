@@ -1,4 +1,4 @@
-package com.mydocket.pdfmaker.converter.results;
+package com.mydocket.pdfserver.converter.results;
 
 import java.io.File;
 
