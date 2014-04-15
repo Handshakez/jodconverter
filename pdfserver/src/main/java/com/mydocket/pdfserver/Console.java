@@ -52,12 +52,21 @@ public class Console {
 
 		final OfficeManager manager = ooconfig.buildOfficeManager();
 		manager.start();
+		execute(manager, serverPort);
+//		addHook(manager);
+//		
+//		Server server = new Server(serverPort, manager);
+//		// TODO: so... are we going to zombify OO all the time here?
+//		server.run();
+		return 0;
+	}
+	
+	protected void execute(OfficeManager manager, int serverPort) throws Exception {
 		addHook(manager);
 		
 		Server server = new Server(serverPort, manager);
 		// TODO: so... are we going to zombify OO all the time here?
 		server.run();
-		return 0;
 	}
 	
 	private void addHook(final OfficeManager manager) {
@@ -138,10 +147,10 @@ public class Console {
 	
 	
 	// exceptions of this type will cause you to exit with a zero rather than 1 exit status
-	private class HarmlessException extends Exception {
+	class HarmlessException extends Exception {
 		private static final long serialVersionUID = 1L;}
 	
 	// return non-zero, but don't print the stack
-	private class QuietException extends Exception {
+	class QuietException extends Exception {
 		private static final long serialVersionUID = 1L;}
 }

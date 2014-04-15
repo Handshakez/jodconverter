@@ -6,6 +6,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
@@ -18,6 +19,14 @@ public class Server {
 	
 	private int port;
 	private OfficeManager officeManager;
+	
+	// http://stackoverflow.com/questions/11288957/how-to-stop-netty-from-listening-and-accepting-on-server-socket
+	//private ServerSocketChannel ssc = null;
+	// No longer seems to be the case?
+	
+	private EventLoopGroup elgBosses;
+	private EventLoopGroup elgWorkers;
+	
 	
 	public boolean running = false;
 	
@@ -33,11 +42,11 @@ public class Server {
 	}
 	
 	public void run() throws Exception {
-		EventLoopGroup bossGroup = new NioEventLoopGroup();
-		EventLoopGroup workerGroup = new NioEventLoopGroup();
+		this.elgBosses = new NioEventLoopGroup();
+		this.elgWorkers = new NioEventLoopGroup();
 		try {
-			ServerBootstrap strap = new ServerBootstrap();
-			strap.group(bossGroup, workerGroup)
+			ServerBootstrap bootstrap = new ServerBootstrap();
+			bootstrap.group(elgBosses, elgWorkers)
 				.channel(NioServerSocketChannel.class)
 				.childHandler(new ChannelInitializer<SocketChannel>() {
 					@Override
@@ -56,13 +65,19 @@ public class Server {
 				.option(ChannelOption.SO_BACKLOG, 128)
 				.childOption(ChannelOption.SO_KEEPALIVE, true);
 			
-			ChannelFuture future = strap.bind(port).sync();
+			ChannelFuture future = bootstrap.bind(port).sync();
 			this.running = true;
 			future.channel().closeFuture().sync();
 			
 		} finally {
-			workerGroup.shutdownGracefully();
-			bossGroup.shutdownGracefully();
+			this.stop();
+		}
+	}
+	
+	public synchronized void stop() {
+		if (this.running) {
+			this.elgWorkers.shutdownGracefully();
+			this.elgBosses.shutdownGracefully();
 			this.running = false;
 		}
 	}
