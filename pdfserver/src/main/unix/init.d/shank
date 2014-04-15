@@ -53,6 +53,7 @@ libdir=/home/ubuntu/shank/lib
 javahome=/usr/lib/jvm/java-6-openjdk-amd64 
 errfile=$LOGDIR/shank.err
 outfile=$LOGDIR/shank.out
+pidfile=$LOGDIR/shank.pid
 
 jsvc_cp=
 for file in $libdir/*jar ; do
@@ -65,13 +66,17 @@ done
 
 appclass=com.mydocket.pdfserver.Daemon
 appopts="--oohome /opt/openoffice4 -p 7001"
-svcopts="-user www-data -umask 666 -java-home $javahome -outfile $outfile -errfile $errfile -pidfile $LOGDIR/shank.pid -cp $jsvc_cp $appclass"
+svcopts="-user www-data -umask 666 -java-home $javahome -outfile $outfile -errfile $errfile -pidfile $pidfile -cp $jsvc_cp $appclass"
 #svcopts="-java-home $javahome -outfile $outfile -errfile $errfile -pidfile $LOGDIR/shank.pid -cp $jsvc_cp $appclass"
 
 
 
 # function to put a timestamp in the out and err logs
 mk_timestamp() {
+    # the following first sets the value and *then* restricts it to local
+    # local d=`date`
+    # see http://www.tldp.org/LDP/abs/html/localvar.html
+    local d
     d=`date`
     for f in $outfile $errfile ; do
         echo "$d $*" >> $f
@@ -166,7 +171,7 @@ case "$1" in
 	esac
 	;;
   status)
-       status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
+       status_of_proc -p $pidfile "$DAEMON" "$NAME" && exit 0 || exit $?
        ;;
   #reload|force-reload)
 	#
