@@ -22,7 +22,10 @@ DESC="Description of the service"
 NAME=shank
 #DAEMON=/usr/sbin/$NAME
 DAEMON=/home/ubuntu/shank/bin/shank
-DAEMON_ARGS="--options args"
+#DAEMON_ARGS="--options args"
+DAEMON_ARGS=
+LOGDIR=/var/log/shank
+DAEMON_LOG=$LOGDIR/shank.init.log
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
@@ -40,6 +43,40 @@ SCRIPTNAME=/etc/init.d/$NAME
 # and status_of_proc is working.
 . /lib/lsb/init-functions
 
+if [ ! -d $LOGDIR ] ; then
+    mkdir $LOGDIR
+    chmod 777 $LOGDIR
+fi
+
+# initialize environment for jsvc
+libdir=/home/ubuntu/shank/lib
+javahome=/usr/lib/jvm/java-6-openjdk-amd64 
+errfile=$LOGDIR/shank.err
+outfile=$LOGDIR/shank.out
+
+jsvc_cp=
+for file in $libdir/*jar ; do
+    if [ -z $jsvc_cp ] ; then
+        jsvc_cp=$file
+    else
+        jsvc_cp=$file:$jsvc_cp
+    fi
+done
+
+appclass=com.mydocket.pdfserver.Daemon
+appopts="--oohome /opt/openoffice4 -p 7001"
+svcopts="-user www-data -umask 666 -java-home $javahome -outfile $outfile -errfile $errfile -pidfile $LOGDIR/shank.pid -cp $jsvc_cp $appclass"
+#svcopts="-java-home $javahome -outfile $outfile -errfile $errfile -pidfile $LOGDIR/shank.pid -cp $jsvc_cp $appclass"
+
+
+
+# function to put a timestamp in the out and err logs
+mk_timestamp() {
+    d=`date`
+    for f in $outfile $errfile ; do
+        echo "$d $*" >> $f
+    done
+}
 #
 # Function that starts the daemon/service
 #
@@ -49,11 +86,21 @@ do_start()
 	#   0 if daemon has been started
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
-	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
-		|| return 1
-	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON -- \
-		$DAEMON_ARGS \
-		|| return 2
+	#start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
+	#	|| return 1
+	#start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON -- \
+	#	$DAEMON_ARGS \
+	#	|| return 2
+#	start-stop-daemon --start --pidfile $PIDFILE --background --make-pidfile --startas $DAEMON --test > /dev/null \
+#		|| return 1
+#	start-stop-daemon --start --pidfile $PIDFILE --background --make-pidfile --startas $DAEMON -- \
+#		$DAEMON_ARGS  2>&1 > $DAEMON_LOG \
+#		|| return 2
+    mk_timestamp "Checking service"
+    jsvc -check $svcopts   || return 1
+
+    mk_timestamp "Starting service"
+    jsvc $svcopts $appopts || return 2
 	# Add code here, if necessary, that waits for the process to be ready
 	# to handle requests from services started subsequently which depend
 	# on this one.  As a last resort, sleep for some time.
@@ -69,7 +116,10 @@ do_stop()
 	#   1 if daemon was already stopped
 	#   2 if daemon could not be stopped
 	#   other if a failure occurred
-	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --name $NAME
+	#start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --name $NAME
+	#start-stop-daemon --stop --retry=TERM/30/KILL/5 --pidfile $PIDFILE --name $NAME
+    mk_timestamp "Stopping service"
+	jsvc -stop $svcopts
 	RETVAL="$?"
 	[ "$RETVAL" = 2 ] && return 2
 	# Wait for children to finish too if this is a daemon that forks
@@ -78,25 +128,25 @@ do_stop()
 	# that waits for the process to drop all resources that could be
 	# needed by services started subsequently.  A last resort is to
 	# sleep for some time.
-	start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON
+	#start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON
 	[ "$?" = 2 ] && return 2
 	# Many daemons don't delete their pidfiles when they exit.
-	rm -f $PIDFILE
+	#rm -f $PIDFILE
 	return "$RETVAL"
 }
 
 #
 # Function that sends a SIGHUP to the daemon/service
 #
-do_reload() {
-	#
-	# If the daemon can reload its configuration without
-	# restarting (for example, when it is sent a SIGHUP),
-	# then implement that here.
-	#
-	start-stop-daemon --stop --signal 1 --quiet --pidfile $PIDFILE --name $NAME
-	return 0
-}
+#do_reload() {
+#	#
+#	# If the daemon can reload its configuration without
+#	# restarting (for example, when it is sent a SIGHUP),
+#	# then implement that here.
+#	#
+#	#start-stop-daemon --stop --signal 1 --quiet --pidfile $PIDFILE --name $NAME
+#	return 0
+#}
 
 case "$1" in
   start)
