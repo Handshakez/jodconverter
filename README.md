@@ -133,3 +133,8 @@ You can list it all out under
 ```
 # iptables -t nat --line-numbers -n -L
 ```
+
+If you want to delete them, use the line numbers and table names obtained from the previous command.  To delete line 2 from the PREROUTING table, do:
+```
+# iptables -t nat -D PREROUTING 2
+```
