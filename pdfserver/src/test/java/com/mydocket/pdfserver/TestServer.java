@@ -45,9 +45,11 @@ public class TestServer {
 		System.out.println("Path:" + System.getProperty("java.library.path"));
 		
 		// now that's out of the way....
+		int officePort = Integer.parseInt(props.getProperty("office.port", "7008"));
+		
 		
 		DefaultOfficeManagerConfiguration configuration = new DefaultOfficeManagerConfiguration();
-		configuration.setPortNumber(7007);
+		configuration.setPortNumber(officePort);
 		configuration.setOfficeHome((String) props.getProperty("office.home", null));
 		manager = configuration.buildOfficeManager();
 		manager.start();
