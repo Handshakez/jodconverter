@@ -39,12 +39,12 @@ public class Daemon {
 	}
 	
 	
-	void stop() throws Exception {
+	public void stop() throws Exception {
 		this.manager.stop();
 		this.server.stop();
 	}
 	
-	void destroy() {
+	public void destroy() {
 		// nothing?
 	}
 }

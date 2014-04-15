@@ -46,6 +46,12 @@
         <version>4.0.17.Final</version>
         <scope>compile</scope>
     </dependency>
+    <!-- for jsvc -->
+    <dependency>
+        <groupId>commons-daemon</groupId>
+        <artifactId>commons-daemon</artifactId>
+        <version>1.0.15</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
