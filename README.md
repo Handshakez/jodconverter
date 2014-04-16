@@ -1,9 +1,10 @@
-# MyDocket PDF Server
+# MyDocket Shank Server
 
 Original code forked from [JODConverter](https://github.com/mirkonasato/jodconverter).
 
 Goal: convert MS Office docs into thumbnails and full pdfs.
 
+Name: Generates 'thumbnails', which lead to 'nails', which lead to 'ringshank nails', which was too long and lead to 'shank'.
 
 ## Table Of Contents:
 
