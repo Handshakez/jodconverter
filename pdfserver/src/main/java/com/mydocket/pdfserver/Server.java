@@ -8,6 +8,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 
 import org.artofsolving.jodconverter.office.OfficeManager;
 
@@ -57,6 +58,7 @@ public class Server {
 								new ConversionResultEncoder(),
 //								new FileResultEncoder(),
 //								new ErrorResultEncoder(),
+								new ReadTimeoutHandler(30),
 								new CommandHandler(Server.this.officeManager)
 								);
 					}
