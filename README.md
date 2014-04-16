@@ -11,6 +11,7 @@ Goal: convert MS Office docs into thumbnails and full pdfs.
 * Architecture
 * Protocol
 * Special Server Side Install Considerations
+* Troubleshooting (TODO as of 4/17/14)
 
 
 ## Installation
@@ -102,7 +103,7 @@ Client sends:
 PUSH\n
 <file size in bytes as a string>\n
 <file contents>
-````=
+```
 
 Server responds either with failure:
 ```
