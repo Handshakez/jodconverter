@@ -68,6 +68,7 @@ $ sudo dpkg -i *deb
 
 ### Install regular old dependencies
 *MacOs* `brew install imagemagick gs libtool`
+
 *Ubuntu* `apt-get install imagemagick`
 
 If building, also install maven and ant either via `brew` or `apt-get`
@@ -81,7 +82,7 @@ There are three projects in here.
 
 Either due to Maven's stupidness or my ignorance, the projects build independently of each other.  The script `all` in the root directory will build all three projects.
 
-Pro tip: to get (most of)  the sources for the jars, so you can hook them up in your IDE, run `mvn dependency:sources`.  This will then copy the jars into your ~/.m2 directory (e.g. `~/.m2/repository/io/netty/netty-all//4.0.17.Final/` now has both `netty-all-4.0.17.Final.jar` and `netty-all-4.0.17.Final-sources.jar`.
+Pro tip: to get (most of)  the sources for the jars, so you can hook them up in your IDE, run `mvn dependency:sources`.  This will then copy the jars into your ~/.m2 directory (e.g. `~/.m2/repository/io/netty/netty-all/4.0.17.Final/` now has both `netty-all-4.0.17.Final.jar` and `netty-all-4.0.17.Final-sources.jar`.
 
 ## Architecture
 
