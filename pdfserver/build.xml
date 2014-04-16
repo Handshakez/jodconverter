@@ -12,12 +12,5 @@
             <fileset dir="${mvn.target.dir}/lib" includes="*.jar"/>
         </copy>
 
-        <!-- have to use exec cp here since <copy/> doesn't preserve file perms -->
-        <mkdir dir="${shank.home}/bin"/>
-        <exec executable="cp">
-            <arg value="${mvn.src.dir}/main/unix/bin/shank"/>
-            <arg value="${shank.home}/bin"/>
-        </exec>
-
     </target>
 </project>

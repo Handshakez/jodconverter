@@ -1,7 +1,6 @@
 # MyDocket PDF Server
-# ==================
 
-Original code forked from [JODConverte](https://github.com/mirkonasato/jodconverter).
+Original code forked from [JODConverter](https://github.com/mirkonasato/jodconverter).
 
 Goal: convert MS Office docs into thumbnails and full pdfs.
 
@@ -11,10 +10,10 @@ Goal: convert MS Office docs into thumbnails and full pdfs.
 * Installation
 * Architecture
 * Protocol
+* Special Server Side Install Considerations
 
 
 ## Installation
-## ============
 
 This project requires a java JRE, open office, imagemagick, and the hyperic "sigar" .dll.  Building it also requires maven and a JDK.
 
@@ -25,9 +24,10 @@ This portion of the document assumes that you have already checked this project 
 Java 1.6+ is required.  If just runnning, a JRE is find.  If building, a JDK is necessary.  If you are installing one go ahead and get the JDK.
 
 *MacOs* has a JDK already installed (I hope!)
+
 *Ubuntu* `apt-get install default-jdk`
 
-You can determine if you have a jdk with the commands `java` and `javac`.  The former will be in both a JRE and a JDK.  The latter is only available in the JDK.o
+You can determine if you have a jdk with the commands `java` and `javac`.  The former will be in both a JRE and a JDK.  The latter is only available in the JDK.
 
 ### Get Open Office
 
@@ -38,6 +38,7 @@ Download OpenOffice 4+ from http://www.openoffice.org/download/other.html .
  - Update the value `office.home` under `$SERVERHOME/pdfserver/src/test/resources/test.properties` to `/Applications/OpenOffice.app/Contents/`
 
 *Ubuntu*
+
 Difficulty: you may already have LibreOffice installed. Or you may already have an old version of OpenOffice installed.
 
 http://askubuntu.com/questions/116590/how-do-i-install-openoffice-org-instead-of-libreoffice
@@ -59,7 +60,7 @@ $ sudo dpkg -i *deb
  - download the hyperic binaries http://sourceforge.net/projects/sigar/files/latest/download?source=files
  - unzip the binaries into /tmp
  - cd `/tmp/hyperic-sigar-1.6.4/sigar-bin`
- - *MacOs* Copy `libsigar-universal64-macosx.dylib` to the Java library path, e.g`/usr/lib/java`
+ - *MacOs* Copy `libsigar-universal64-macosx.dylib` to the Java library path, e.g. `/usr/lib/java`
  - *Ubuntu* Copy `libsigar-amd64-linux.so` to `/usr/lib`
  - *Both* Probably need to adjust permissions: `chmod 555 <the shared lib>`
 
@@ -71,9 +72,14 @@ If building, also install maven and ant either via `brew` or `apt-get`
 
 ## Building
 
-There are three projects in here.  jod-core and pdfserver are the ones we care about.  Either due to Maven's stupidness or my ignorance, the projects build independently of each other.  The poorly named script `both` in the root directory will build all three projects.
+There are three projects in here.  
+- `jodconverter-core` contains the code to import and export from OpenOffice.  
+- `jodconverter-sample-webapp` will build a warfile, which we do not use.  We (maybe?) use some of the classes from this.
+- `pdfserver` is mydocket code.  
 
-Pro tip: to get (most of)  the sources for the jars, so you can hook them up in your IDE, run `mvn dependency:sources`.  This will then copy the jars into your ~/.m2 directory (e.g. `~/.m2/repository/io/netty//netty-all//4.0.17.Final/` now has both `netty-all-4.0.17.Final.jar` and `netty-all-4.0.17.Final-sources.jar`.
+Either due to Maven's stupidness or my ignorance, the projects build independently of each other.  The script `all` in the root directory will build all three projects.
+
+Pro tip: to get (most of)  the sources for the jars, so you can hook them up in your IDE, run `mvn dependency:sources`.  This will then copy the jars into your ~/.m2 directory (e.g. `~/.m2/repository/io/netty/netty-all//4.0.17.Final/` now has both `netty-all-4.0.17.Final.jar` and `netty-all-4.0.17.Final-sources.jar`.
 
 ## Architecture
 
@@ -92,27 +98,33 @@ The port takes a remote request to transform a file.  Once the file comes in ove
 The protocol consists of two types of messages. Some of them are new line (chr(13)) delimited strings.  Others are arrays of bytes specified by a size.
 
 Client sends:
+```
 PUSH\n
 <file size in bytes as a string>\n
 <file contents>
+````=
 
 Server responds either with failure:
+```
 1\n
 <rest of connection is error message>
+```
 
 Or with successs:
+```
 0\n
 <thumbnail size in bytes are string>\n
 <thumbnail data>
 0\n
 <full file size in bytes are string>\n
 <full file data>
+```
 
 NB that the procedure may fail after the thumbnail.  In which case the client will received a "1" and a string containing the error message.
 
 ## Special Server Side Install Considerations
 
-(work in progress as of 4/xi157/2014)
+(work in progress as of 4/15/2014)
 
 ### Binding to port 80
 Under Unix, ports underneath 1024 are restricted.  They can only be bound by users with root privs. However, our AWS config only has a couple of ports open to the outside world, and these are all in the restricted areas.  Some solutions to this are
