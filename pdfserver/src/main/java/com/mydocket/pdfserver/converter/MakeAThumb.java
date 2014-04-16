@@ -17,14 +17,27 @@ public class MakeAThumb {
 	public File doThumb(File baseFileName, File source) throws Exception {
 		File thumb = getExtensionFile(baseFileName, "_thumb.png");
 		// convert "$outpdf[0]" -flatten -resize "150x150" -colorspace 'rgb' $outjpg 2>/dev/null
-		String[] cmd = {
-				"convert",
-				source.getAbsolutePath() + "[0]",
-				"-flatten",
-				"-resize", "150x150",
-				"-colorspace", "rgb",
-				thumb.getAbsolutePath()
-		};
+		String[] cmd = null;
+
+        // this is to make a 150x150.  Quite fuzzy when you scale up
+        if (false) {
+            cmd = new String[] {
+                    "convert",
+                    source.getAbsolutePath() + "[0]",
+                    "-flatten",
+                    "-resize", "150x150",
+                    "-colorspace", "rgb",
+                    thumb.getAbsolutePath()
+            };
+        } else {
+        // export the first page as native size
+        cmd = new String[] {
+                    "convert",
+                    source.getAbsolutePath() + "[0]",
+                    "-flatten",
+                    thumb.getAbsolutePath()
+            };
+        }
 		
 		logger.debug("Converter command: " + cmd);
 		// if you get a "can't find convert", make sure to add /usr/local/bin to the path
