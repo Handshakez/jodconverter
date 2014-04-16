@@ -86,13 +86,14 @@ Pro tip: to get (most of)  the sources for the jars, so you can hook them up in 
 
 An open office server is spun up in the background.  A 'netty' server is also spun up and listens on a port for incoming traffic.
 
-The port takes a remote request to transform a file.  Once the file comes in ove r the write, the server attempts to
+The port takes a remote request to transform a file.  Once the file comes in over the wire, the server attempts to
 - import the file into open office
 - export a single page pdf of the file
 - convert the single page pdf into a png thumbnail (via imagemagick)
 - export the entire file into a larger pdf
 - return both the thumbnail and the full pdf back to the client
 
+Special consideration is paid if the input file is already a PDF.  In this case, the document is not converted by open office.  Instead a thumbnail is generated from the first page and the original document is returned as is.
 
 ## Protocol
 
