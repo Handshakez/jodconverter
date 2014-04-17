@@ -14,7 +14,7 @@ public class ErrorResult implements IConversionResult {
 	private String errorMessage = null;
 
 
-	public ErrorResult(Exception e) {
+	public ErrorResult(Throwable e) {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		e.printStackTrace(pw);

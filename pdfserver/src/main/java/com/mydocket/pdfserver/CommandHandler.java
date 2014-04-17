@@ -5,6 +5,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.ReadTimeoutException;
 
 import org.artofsolving.jodconverter.office.OfficeManager;
 
@@ -13,6 +14,7 @@ import com.mydocket.pdfserver.command.ICommand;
 import com.mydocket.pdfserver.command.PushCommand;
 import com.mydocket.pdfserver.command.StopCommand;
 import com.mydocket.pdfserver.converter.FileConverter;
+import com.mydocket.pdfserver.converter.Observer;
 
 public class CommandHandler extends ChannelInboundHandlerAdapter {
 	private FileConverter converter = null;
@@ -56,7 +58,13 @@ public class CommandHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 		cause.printStackTrace();
-		ctx.close();
+		if (cause instanceof ReadTimeoutException) {
+			Observer obs = new Observer(ctx);
+			obs.observe(cause);
+			obs.finish();
+		} else {
+			ctx.close();
+		}
 	}
 
 }

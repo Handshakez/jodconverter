@@ -27,7 +27,7 @@ public class Observer {
 		this.observe(new FileResult(result));
 	}
 
-	public void observe(Exception result) {
+	public void observe(Throwable result) {
 		this.observe(new ErrorResult(result));
 	}
 	
