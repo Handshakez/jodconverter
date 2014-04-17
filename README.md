@@ -47,7 +47,7 @@ http://askubuntu.com/questions/116590/how-do-i-install-openoffice-org-instead-of
 http://www.liberiangeek.net/2013/08/apache-openoffice-4-0-releasedheres-how-to-install-it-in-ubuntu/
  - First `soffice -version`.  If this says 'not found', you need to install. If it says 'OpenOffice 4', you are good.  If you see anything else you will need to uninstall.
  - If purging, start with `apt-get remove --purge libreoffice-core`.  The program `aptitude` may be helpful.
- - Download the .deb version of the the office installer to /tmp
+ - Download the .deb version of the the office installer to `/tmp`.  Curl can doit, e.g. `curl -O -L http://sourceforge.net/projects/openofficeorg.mirror/files/4.0.1/binaries/en-US/Apache_OpenOffice_4.0.1_Linux_x86-64_install-deb_en-US.tar.gz/download`
 ```
 $ cd /tmp
 $ tar xzf <the tarball>
@@ -55,13 +55,13 @@ $ cd <the tar directory>
 $ cd en-US/DEBS
 $ sudo dpkg -i *deb
 ```
- - if `soffice -version` is still not telling you anything, you may have to link it by hand `sudo ln -s /opt/openoffice4/bin/soffice /usr/local/bin/soffice`.
+ - if `soffice -version` is still not telling you anything, you may have to link it by hand `sudo ln -s /opt/openoffice4/program/soffice /usr/local/bin/soffice`.
  - Update the value `office.home` under `$SERVERHOME/pdfserver/src/test/resources/test.properties` to the approriate value.
 
 ### Install Hyperic SIGAR
  - download the hyperic binaries http://sourceforge.net/projects/sigar/files/latest/download?source=files
  - unzip the binaries into /tmp
- - cd `/tmp/hyperic-sigar-1.6.4/sigar-bin`
+ - cd `/tmp/hyperic-sigar-1.6.4/sigar-bin/lib`
  - *MacOs* Copy `libsigar-universal64-macosx.dylib` to the Java library path, e.g. `/usr/lib/java`
  - *Ubuntu* Copy `libsigar-amd64-linux.so` to `/usr/lib`
  - *Both* Probably need to adjust permissions: `chmod 555 <the shared lib>`
