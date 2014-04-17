@@ -1,0 +1,12 @@
+/var/log/shank.out {
+    weekly
+    rotate 4
+    missingok
+    copytruncate
+}
+/var/log/shank.err {
+    weekly
+    rotate 4
+    missingok
+    copytruncate
+}

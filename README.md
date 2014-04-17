@@ -173,9 +173,10 @@ This will copy the jar files into `/home/ubuntu/shank/lib`.
 $ sudo apt-get install jsvc
 ```
 
-- Create the `init.d` script link and set to run on start
+- Create `/etc` script links and set service to start on boot
 
 ```
+$ sudo ln -s $SERVERHOME/src/main/unix/logrotate.d/shank /etc/logrotate.d/shank
 $ sudo ln -s $SERVERHOME/src/main/unix/init.d/shank /etc/init.d/shank
 $ sudo update-rc.d shank defaults
 ```
