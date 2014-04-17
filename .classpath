@@ -20,9 +20,10 @@
 	<classpathentry kind="lib" path="jodconverter-sample-webapp/target/lib/commons-fileupload-1.2.1.jar"/>
 	<classpathentry kind="lib" path="jodconverter-sample-webapp/target/lib/servlet-api-2.4.jar"/>
 	<classpathentry kind="lib" path="jodconverter-core/target/lib/commons-io-2.4.jar"/>
-	<classpathentry kind="lib" path="pdfserver/target/lib/jul-to-slf4j-1.7.6.jar"/>
 	<classpathentry kind="lib" path="pdfserver/target/lib/slf4j-api-1.7.6.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/Users/aarvesen/.m2/repository/io/netty/netty-all/4.0.17.Final/netty-all-4.0.17.Final.jar" sourcepath="/Users/aarvesen/.m2/repository/io/netty/netty-all/4.0.17.Final/netty-all-4.0.17.Final-sources.jar"/>
+	<classpathentry kind="lib" path="pdfserver/target/lib/logback-classic-1.1.2.jar"/>
+	<classpathentry kind="lib" path="pdfserver/target/lib/logback-core-1.1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

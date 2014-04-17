@@ -14,6 +14,7 @@ public class MakeAThumb {
 	private static final Logger logger = LoggerFactory
 			.getLogger(MakeAThumb.class);
 
+	@SuppressWarnings("unused")
 	public File doThumb(File baseFileName, File source) throws Exception {
 		File thumb = getExtensionFile(baseFileName, "_thumb.png");
 		// convert "$outpdf[0]" -flatten -resize "150x150" -colorspace 'rgb' $outjpg 2>/dev/null
@@ -39,7 +40,16 @@ public class MakeAThumb {
             };
         }
 		
-		logger.debug("Converter command: " + cmd);
+        if (logger.isDebugEnabled()) {
+        	StringBuilder sb = new StringBuilder();
+        	for (String s : cmd) {
+        		if (sb.length() > 0 ) {
+        			sb.append(" ");
+        		}
+        		sb.append(s);
+        	}
+        	logger.debug("Converter command: " + sb.toString());
+        }
 		// if you get a "can't find convert", make sure to add /usr/local/bin to the path
 		ProcessBuilder pb = new ProcessBuilder(cmd);
 		Process p = pb.start();

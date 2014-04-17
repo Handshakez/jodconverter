@@ -8,6 +8,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.ReadTimeoutException;
 
 import org.artofsolving.jodconverter.office.OfficeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.mydocket.pdfserver.command.HelloCommand;
 import com.mydocket.pdfserver.command.ICommand;
@@ -18,6 +20,9 @@ import com.mydocket.pdfserver.converter.Observer;
 
 public class CommandHandler extends ChannelInboundHandlerAdapter {
 	private FileConverter converter = null;
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(CommandHandler.class);
 	
 	public CommandHandler(OfficeManager officeManager) {
 		this.converter = new FileConverter(officeManager);
@@ -56,13 +61,18 @@ public class CommandHandler extends ChannelInboundHandlerAdapter {
 	
 	
 	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-		cause.printStackTrace();
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		//cause.printStackTrace();
 		if (cause instanceof ReadTimeoutException) {
 			Observer obs = new Observer(ctx);
 			obs.observe(cause);
 			obs.finish();
 		} else {
+			try {
+				super.exceptionCaught(ctx, cause);
+			} catch (Exception e) {
+				logger.error("Error in command handler", e);
+			}
 			ctx.close();
 		}
 	}
