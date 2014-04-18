@@ -19,7 +19,13 @@ Name: Generates 'thumbnails', which lead to 'nails', which lead to 'ringshank na
 
 This project requires a java JRE, open office, imagemagick, and the hyperic "sigar" .dll.  Building it also requires maven and a JDK.
 
-This portion of the document assumes that you have already checked this project out locally into `$SERVERHOME`
+The rest of this document will assume that you have checked this project out into `$SERVERHOME`
+
+```
+$ cd $SERVERHOME/..
+$ git clone git@github.com:Handshakez/jodconverter.git
+$ cd jodconverter
+```
 
 ### Get java
 
@@ -56,7 +62,7 @@ $ cd en-US/DEBS
 $ sudo dpkg -i *deb
 ```
  - if `soffice -version` is still not telling you anything, you may have to link it by hand `sudo ln -s /opt/openoffice4/program/soffice /usr/local/bin/soffice`.
- - Update the value `office.home` under `$SERVERHOME/pdfserver/src/test/resources/test.properties` to the approriate value.
+ - Update the value `office.home` under `$SERVERHOME/pdfserver/src/test/resources/test.properties` to the approriate value, such as `/opt/openoffice4/` .
 
 ### Install Hyperic SIGAR
  - download the hyperic binaries http://sourceforge.net/projects/sigar/files/latest/download?source=files
@@ -173,11 +179,12 @@ This will copy the jar files into `/home/ubuntu/shank/lib`.
 $ sudo apt-get install jsvc
 ```
 
-- Create `/etc` script links and set service to start on boot
+- Create `/etc` script links and set service to start on boot.  NB that absolute paths work best with `ln`
 
 ```
-$ sudo ln -s $SERVERHOME/src/main/unix/logrotate.d/shank /etc/logrotate.d/shank
-$ sudo ln -s $SERVERHOME/src/main/unix/init.d/shank /etc/init.d/shank
+$ cd $SERVERHOME/pdfserver
+$ sudo ln -s $PWD/src/main/unix/logrotate.d/shank /etc/logrotate.d/shank
+$ sudo ln -s $PWD/src/main/unix/init.d/shank /etc/init.d/shank
 $ sudo update-rc.d shank defaults
 ```
 
