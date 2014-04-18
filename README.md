@@ -22,9 +22,8 @@ This project requires a java JRE, open office, imagemagick, and the hyperic "sig
 The rest of this document will assume that you have checked this project out into `$SERVERHOME`
 
 ```
-$ cd $SERVERHOME/..
 $ git clone git@github.com:Handshakez/jodconverter.git
-$ cd jodconverter
+$ cd jodconverter   # this will be $SERVERHOME
 ```
 
 ### Get java
